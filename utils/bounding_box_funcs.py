@@ -1,6 +1,12 @@
+import os
+
 import matplotlib.pyplot as plt
-import tensorflow as tf
 import numpy as np
+import PIL.Image
+import PIL.ImageDraw
+import PIL.ImageFont
+import tensorflow as tf
+
 """
 This cell contains helper functions used for visualization
 and downloads only.
