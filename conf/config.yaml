@@ -1,0 +1,16 @@
+
+DATASET:
+  DATASET_DIR: 'datasets'
+  DATASET_NAME: 'BoneFractureYolo8'
+  BONE_FRACTURE_DETECTION_DATASET_URL: 'https://www.kaggle.com/datasets/pkdarabi/bone-fracture-detection-computer-vision-project/data'
+
+DATASET_DIRS:
+  TRAIN_DIR: ${DATASET.DATASET_DIR}/${DATASET.DATASET_NAME}/train/
+  VALIDATION_DIR: ${DATASET.DATASET_DIR}/${DATASET.DATASET_NAME}/valid
+  TEST_DIR: ${DATASET.DATASET_DIR}/${DATASET.DATASET_NAME}/test
+
+TRAIN:
+  BATCH_SIZE: 32
+  NUM_EPOCHS: 10
+  LEARNING_RATE: 0.0001
+  IMG_SIZE: 224
