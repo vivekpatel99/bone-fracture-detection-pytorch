@@ -1,93 +1,105 @@
 import numpy as np
-import PIL
+import cv2
+import matplotlib.pyplot as plt
 
-im_width = 75
-im_height = 75
-use_normalized_coordinates = True
-
-
-def draw_bounding_boxes_on_image_array(image,
-                                       boxes,
-                                       color=[],
-                                       thickness=1,
-                                       display_str_list=()):
-    """Draws bounding boxes on image (numpy array).
-    Args:
-      image: a numpy array object.
-      boxes: a 2 dimensional numpy array of [N, 4]: (ymin, xmin, ymax, xmax).
-             The coordinates are in normalized format between [0, 1].
-      color: color to draw bounding box. Default is red.
-      thickness: line thickness. Default value is 4.
-      display_str_list_list: a list of strings for each bounding box.
-    Raises:
-      ValueError: if boxes is not a [N, 4] array
+def unnormalize_bbox(image, coords):
     """
-    image_pil = PIL.Image.fromarray(image)
-    rgbimg = PIL.Image.new("RGBA", image_pil.size)
-    rgbimg.paste(image_pil)
-    draw_bounding_boxes_on_image(rgbimg, boxes, color, thickness,
-                                 display_str_list)
-    return np.array(rgbimg)
+    Unnormalizes bounding box coordinates from [0, 1] to pixels.
 
+    Parameters
+    ----------
+    image : ndarray
+        The image the bounding box is drawn on.
+    coords : iterable
+        The normalized coordinates of the bounding box.
 
-def draw_bounding_boxes_on_image(image,
-                                 boxes,
-                                 color=[],
-                                 thickness=1,
-                                 display_str_list=()):
-    """Draws bounding boxes on image.
-    Args:
-      image: a PIL.Image object.
-      boxes: a 2 dimensional numpy array of [N, 4]: (ymin, xmin, ymax, xmax).
-             The coordinates are in normalized format between [0, 1].
-      color: color to draw bounding box. Default is red.
-      thickness: line thickness. Default value is 4.
-      display_str_list: a list of strings for each bounding box.
-
-    Raises:
-      ValueError: if boxes is not a [N, 4] array
+    Returns
+    -------
+    coords : ndarray
+        The unnormalized coordinates of the bounding box.
     """
-    boxes_shape = boxes.shape
-    if not boxes_shape:
-        return
-    if len(boxes_shape) != 2 or boxes_shape[1] != 4:
-        raise ValueError('Input must be of size [N, 4]')
-    for i in range(boxes_shape[0]):
-        draw_bounding_box_on_image(image, boxes[i, 1], boxes[i, 0], boxes[i, 3],
-                                   boxes[i, 2], color[i], thickness, display_str_list[i])
+
+    h, w, _ = image.shape
+    coords = np.array(coords).reshape(-1, 2)
+    coords[:, 0] *= w
+    coords[:, 1] *= h
+    return coords
 
 
-def draw_bounding_box_on_image(image,
-                               ymin,
-                               xmin,
-                               ymax,
-                               xmax,
-                               color='red',
-                               thickness=1,
-                               display_str=None,
-                               use_normalized_coordinates=True):
-    """Adds a bounding box to an image.
-    Bounding box coordinates can be specified in either absolute (pixel) or
-    normalized coordinates by setting the use_normalized_coordinates argument.
-    Args:
-      image: a PIL.Image object.
-      ymin: ymin of bounding box.
-      xmin: xmin of bounding box.
-      ymax: ymax of bounding box.
-      xmax: xmax of bounding box.
-      color: color to draw bounding box. Default is red.
-      thickness: line thickness. Default value is 4.
-      display_str_list: string to display in box
-      use_normalized_coordinates: If True (default), treat coordinates
-        ymin, xmin, ymax, xmax as relative to the image.  Otherwise treat
-        coordinates as absolute.
+def plot_bbox(image:np.ndarray, class_id:int, label:str,  bbox:np.ndarray) -> None:
     """
-    draw = PIL.ImageDraw.Draw(image)
-    im_width, im_height = image.size
-    if use_normalized_coordinates:
-        (left, right, top, bottom) = (xmin * im_width, xmax * im_width,
-                                      ymin * im_height, ymax * im_height)
-    else:
-        (left, right, top, bottom) = (xmin, xmax, ymin, ymax)
-    draw.line([(left, top), (left, bottom), (right, bottom),
-               (right, top), (left, top)], width=thickness, fill=color)
+    Plots a bounding box onto an image.
+
+    Parameters
+    ----------
+    image : ndarray
+        The image to plot the bounding box on.
+    class_id : int
+        The class ID of the object in the bounding box.
+    bbox : iterable
+        The coordinates of the bounding box, normalized to [0, 1].
+
+    Returns
+    -------
+    None
+    """
+
+    coords = unnormalize_bbox(image, bbox)
+    coords = coords.astype(int)
+    for i in range(len(coords)):
+        cv2.line(image, tuple(coords[i]), tuple(
+            coords[(i + 1) % len(coords)]), (0, 255, 0), 2)
+    cv2.putText(image, str(class_id), tuple(
+        coords[0]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+    plt.title(label)
+    plt.imshow(image)
+    plt.show()
+
+
+import random
+
+
+def plot_multiple_images(image_paths:list[str], bboxes:list[np.ndarray], class_ids:int, class_mapping:dict) -> None:
+
+    """
+    Plots multiple images with bounding boxes.
+
+    Parameters
+    ----------
+    images : list
+        A list of paths to images.
+    bboxes : list
+        A list of bounding boxes, where each bounding box is an iterable of
+        normalized coordinates [x1, y1, x2, y2].
+    class_ids : list
+        A list of class IDs, where each class ID is an integer.
+    class_mapping : dict
+        A dictionary mapping class IDs to class labels.
+
+    Returns
+    -------
+    None
+    """
+    def _plot_bbox(image,  bbox):
+        coords = unnormalize_bbox(image, bbox)
+        coords = coords.astype(int)
+        for i in range(len(coords)):
+            cv2.line(image, tuple(coords[i]), tuple(
+                coords[(i + 1) % len(coords)]), (0, 255, 0), 2)
+        return image
+    random_idx = random.sample(range(len(image_paths)), 8)
+    print(random_idx)
+    fig, axes = plt.subplots(2, 4, figsize=(20, 10))
+    axes = axes.flatten()
+
+    for idx, ax in zip(random_idx, axes):
+        image = cv2.imread(image_paths[idx])
+        bbox = bboxes[idx]
+        class_label = class_mapping[class_ids[idx]]
+        image_with_bbox = _plot_bbox(image, bbox)
+        ax.imshow(cv2.cvtColor(image_with_bbox, cv2.COLOR_BGR2RGB))
+        ax.set_title(class_label)
+        ax.axis('off')
+
+    plt.tight_layout()
+    plt.show()
