@@ -95,7 +95,7 @@ def plot_multiple_images(image_paths:list[str], bboxes:list[np.ndarray], class_i
     for idx, ax in zip(random_idx, axes):
         image = cv2.imread(image_paths[idx])
         bbox = bboxes[idx]
-        class_label = class_mapping[class_ids[idx]]
+        class_label = class_mapping[class_ids[idx][0]]
         image_with_bbox = _plot_bbox(image, bbox)
         ax.imshow(cv2.cvtColor(image_with_bbox, cv2.COLOR_BGR2RGB))
         ax.set_title(class_label)
