@@ -1,17 +1,17 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-dockerfile
 {
-	"name": "tf-GPU",
+	"name": "Bone-fracture-detection",
 	"build": {
 		// Sets the run context to one level up instead of the .devcontainer folder.
 		"context": "..",
 		// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
 		"dockerfile": "../Dockerfile",
-		"args": {
-			"USERNAME": "ultron", // Replace with your host username
-			"UID": "${localEnv:UID}", // Automatically gets the host user's UID
-			"GID": "${localEnv:GID}" // Automatically gets the host user's GID
-		}
+		// "args": {
+		// 	"USERNAME": "ultron", // Replace with your host username
+		// 	"UID": "${localEnv:UID}", // Automatically gets the host user's UID
+		// 	"GID": "${localEnv:GID}" // Automatically gets the host user's GID
+		// }
 	},
 	// Configure tool-specific properties.
 	"customizations": {
@@ -20,7 +20,7 @@
 			// Set *default* container specific settings.json values on container create.
 			"settings": {
 				"terminal.integrated.defaultProfile.linux": "bash",
-				"python.defaultInterpreterPath": "/usr/bin/python3"
+				"python.defaultInterpreterPath": ".venv/bin/python3"
 			},
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
@@ -34,15 +34,12 @@
 				"ms-toolsai.jupyter-keymap",
 				"ms-toolsai.jupyter-renderers",
 				"ms-toolsai.vscode-jupyter-powertoys",
-				"iterative.vscode-dvc-pack",
-				"Codeium.codeium",
 				"charliermarsh.ruff",
 				"VisualStudioExptTeam.vscodeintellicode"
 			]
 		}
 	},
 	"runArgs": [
-		"--privileged",
 		"--gpus",
 		"all",
 		"--ulimit",
@@ -58,7 +55,7 @@
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 	// Uncomment the next line to run commands after the container is created - for example installing curl.
-	// "postCreateCommand": "pip install --no-cache-dir -r requirements.txt",
+	"postCreateCommand": "uv sync --active",
 	// Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-from-docker.
 	// "mounts": [
 	// 	{
@@ -70,5 +67,5 @@
 	// Configure tool-specific properties.
 	// "customizations": {},
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	"remoteUser": "ultron"
+	// "remoteUser": "ultron"
 }
