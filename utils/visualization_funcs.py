@@ -1,3 +1,5 @@
+import random
+
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
@@ -63,7 +65,6 @@ def plot_bbox(image:np.ndarray, class_id:int, label:str,  bbox:np.ndarray) -> No
     plt.show()
 
 
-import random
 
 
 def plot_multiple_images(image_paths:list[str], bboxes:list[np.ndarray], class_ids:int, class_mapping:dict) -> None:
@@ -90,9 +91,9 @@ def plot_multiple_images(image_paths:list[str], bboxes:list[np.ndarray], class_i
     def _plot_bbox(image,  bbox):
         coords = unnormalize_bbox(image, bbox)
         coords = coords.astype(int)
-        for i in range(len(coords)):
-            cv2.line(image, tuple(coords[i]), tuple(
-                coords[(i + 1) % len(coords)]), (0, 255, 0), 2)
+        # for i in range(len(coords)):
+        #     cv2.line(image, tuple(coords[i]), tuple(
+        #         coords[(i + 1) % len(coords)]), (0, 255, 0), 2)
         xmin = coords[:, 0].min()
         ymin = coords[:, 1].min()
         xmax = coords[:, 0].max()

@@ -6,6 +6,7 @@ import tensorflow as tf
 import tqdm
 from tqdm.notebook import tqdm
 
+
 class PrepareDataset:
     def __init__(self, image_dir: Path, label_dir: Path, dst_img_size:tuple[int, int]=(224,224)) -> None:
         """
@@ -24,7 +25,7 @@ class PrepareDataset:
         scaled_img = resize_img / 255.
         return tf.cast(scaled_img, tf.float32)
     
-    def get_dataset(self) -> tuple[list[str], list[int], list[np.ndarray]]:
+    def get_dataset(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Loads and parses YOLOv8 labels.
 
         Args:
@@ -94,4 +95,4 @@ class PrepareDataset:
                 # class_ids.append(image_classes)
                 # bboxes.append(np.concatenate(image_bboxes, axis=0))  # Concatenate boxes for the image
 
-        return image_paths, class_ids, bboxes
+        return np.array(image_paths), np.array(class_ids), np.array(bboxes)
