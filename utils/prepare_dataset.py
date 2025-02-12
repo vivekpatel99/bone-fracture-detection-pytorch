@@ -1,4 +1,4 @@
-import os
+
 from pathlib import Path
 
 import numpy as np
@@ -6,9 +6,8 @@ import tensorflow as tf
 import tqdm
 from tqdm.notebook import tqdm
 
-
 class PrepareDataset:
-    def __init__(self, image_dir: Path, label_dir: Path, dst_img_size:tuple[int, int]) -> None:
+    def __init__(self, image_dir: Path, label_dir: Path, dst_img_size:tuple[int, int]=(224,224)) -> None:
         """
         Args:
             image_dir (str): Path to the directory containing the images.
