@@ -1,0 +1,82 @@
+# https://github.com/ArjanCodes/examples/blob/main/2024/vscode_python/ruff.toml
+# https://docs.astral.sh/ruff/configuration/
+
+# Standard excludes for common directories/files Ruff shouldn't check
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
+
+# Set line length consistent with Black
+line-length = 150
+indent-width = 4
+
+# Specify the target Python version for compatibility checks
+target-version = "py312"
+
+[lint]
+# Select a broader set of rules for more comprehensive checks:
+# E: Pycodestyle Errors
+# W: Pycodestyle Warnings
+# F: Pyflakes
+# I: isort (import sorting)
+# B: flake8-bugbear (potential bugs/design issues)
+# C4: flake8-comprehensions (nicer comprehensions)
+# SIM: flake8-simplify (code simplification)
+# TID: flake8-tidy-imports (banned imports, relative imports)
+# Consider adding D (pydocstyle) if enforcing docstring conventions
+select = ["E", "W", "F", "I", "B", "C4", "SIM", "TID"]
+
+# Ignore specific rules if necessary.
+# F401: Unused imports (explicitly ignored as per request)
+# Add others here if they conflict with project style, e.g., ignore = ["F401", "E501"]
+ignore = ["F401", "B904", "F403"]
+
+# Allow Ruff to automatically fix all fixable violations
+fixable = ["ALL"]
+unfixable = []
+
+# Standard regex for identifying dummy variables (e.g., _, __, _my_var)
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# Optional: Configure pydocstyle if 'D' is selected above
+# [lint.pydocstyle]
+# convention = "google" # Or "numpy", "pep257"
+
+[format]
+# Use double quotes for strings
+quote-style = "double"
+# Use spaces for indentation
+indent-style = "space"
+# Don't skip the magic trailing comma (useful for cleaner diffs)
+skip-magic-trailing-comma = false
+# Auto-detect line endings
+line-ending = "auto"
+# Format code examples within docstrings
+docstring-code-format = true
+# Let Ruff determine the line length for code in docstrings
+docstring-code-line-length = "dynamic"

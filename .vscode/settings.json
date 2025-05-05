@@ -1,0 +1,32 @@
+{
+    // https://github.com/ArjanCodes/examples/blob/main/2024/vscode_python/.vscode/settings.json
+    // Python settings
+
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingImports": "none"
+    },
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/src",
+        "${workspaceFolder}/notebooks"
+    ],
+    "python.defaultInterpreterPath": ".venv/bin/python",
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.terminal.activateEnvironment": true,
+    // Test settings
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.cwd": "${workspaceFolder}/tests",
+    "python.testing.pytestPath": ".venv/bin/python",
+    "python.testing.autoTestDiscoverOnSaveEnabled": true,
+    "files.exclude": {
+    "**/*.egg-info": true,
+    "**/htmlcov": true,
+    "**/~$*": true,
+    "**/.coverage.*": true,
+    "**/.venv": false,
+    "**/__pycache__": true,
+    "**/.mypy_cache": true,
+    "**/.pytest_cache": true,
+  }
+}

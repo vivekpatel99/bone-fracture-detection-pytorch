@@ -1,0 +1,56 @@
+# .dockerignore
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Python virtual environment
+.venv
+venv
+env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE/Editor specific
+.idea/
+.vscode/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Tests (if not needed in the final image)
+tests/
+*.test.py
+pytest.ini
+
+# Local config/secrets (handle secrets securely, don't copy them in)
+.env
+secrets.*
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Add any other files or directories you don't need in the image
+# e.g., large datasets, documentation source files, etc.
+# data/raw/
+# docs/
+artifact
+.gitignore
+logs
+template.py
+demo.py
+README.md
+LICENSE
+src.egg.-info
+notebook

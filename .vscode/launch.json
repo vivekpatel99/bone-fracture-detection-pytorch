@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Test File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "test.py",
+            "console": "integratedTerminal",
+            "env": {
+                "PATH": "${env:PATH}",
+                "PYTHONPATH": "${workspaceFolder}",
+                "PYTHON_ALIAS": "uv run "
+            },
+            "justMyCode": true,
+            "preLaunchTask": "setPythonAlias"
+            
+        }
+    ]
+}
