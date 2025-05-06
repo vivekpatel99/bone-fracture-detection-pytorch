@@ -1,0 +1,4 @@
+# Kaggle dataset information
+dataset_dir: "datasets"
+dataset_name: "lung-and-colon-cancer-histopathological-images"
+dataset_url: "https://www.kaggle.com/datasets/andrewmvd/lung-and-colon-cancer-histopathological-images/data"

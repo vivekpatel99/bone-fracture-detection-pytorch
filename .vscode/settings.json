@@ -24,9 +24,12 @@
     "**/htmlcov": true,
     "**/~$*": true,
     "**/.coverage.*": true,
-    "**/.venv": false,
+    "**/.venv": true,
+    "**/.ipynb_checkpoints": true,
     "**/__pycache__": true,
+    "**/.ruff_cache": true,
     "**/.mypy_cache": true,
     "**/.pytest_cache": true,
+    ".python-version":true
   }
 }

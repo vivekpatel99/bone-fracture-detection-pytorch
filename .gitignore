@@ -172,7 +172,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-notebooks/*.csv
+notebooks/*.csv7bff6546e3548ce48e65cc6c848ce9bc
 data/*.csv
 *.pkl
 artifact/
@@ -180,3 +180,6 @@ node_modules
 mlruns
 heart-attack-pred-key.pem
 logs
+.vscode/tasks.json.dvc
+datasets
+kaggle.json

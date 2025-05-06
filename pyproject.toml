@@ -1,5 +1,5 @@
 [project]
-name = "bone-fracture-detect-YOLOv8"
+name = "Lung-and-Colon-Cancer-Classification-pytorch"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"

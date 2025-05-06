@@ -60,7 +60,7 @@ repos:
       - id: codespell
         args:
           - --skip=logs/**,data/**,*.ipynb
-          - --ignore-words-list=abc,def,fpr,tpr,roc_auc,auc,pipline
+          - --ignore-words-list=abc,def,bui
 
   - repo: https://github.com/nbQA-dev/nbQA
     rev: 1.9.1
