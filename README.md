@@ -55,7 +55,7 @@ url= {https://github.com/tampapath/lung_colon_image_set}
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/vivekpatel99/heart-attack-predictor-end-to-end-ml-project.git
+   git clone https://github.com/vivekpatel99/lung-and-colon-cancer-classification-pytorch.git
    cd heart-attack-predictor-end-to-end-ml-project
    ```
 
@@ -103,7 +103,6 @@ url= {https://github.com/tampapath/lung_colon_image_set}
 
      ```dotenv
      # .env
-     MONGODB_URL="mongodb+srv://<username>:<password>@<your-cluster-url>/?retryWrites=true&w=majority"
      AWS_ACCESS_KEY_ID="YOUR_AWS_ACCESS_KEY_ID"
      AWS_SECRET_ACCESS_KEY="YOUR_AWS_SECRET_ACCESS_KEY"
      AWS_REGION="us-east-1" # Or your chosen region

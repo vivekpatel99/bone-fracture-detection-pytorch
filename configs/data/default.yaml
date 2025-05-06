@@ -2,6 +2,9 @@
 defaults:
   - _self_
   - lung_colon_cancer_images
+
+valid_ds_size: 0.2
+test_ds_size: 0.1
 # Dataset parameters
 # dataset:
 #   _target_: src.datamodules.components.breast_cancer_dataset.BreastCancerDataset
