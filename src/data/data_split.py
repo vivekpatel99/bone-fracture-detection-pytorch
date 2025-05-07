@@ -1,5 +1,3 @@
-import os
-import shutil
 from collections import defaultdict
 from pathlib import Path
 
@@ -8,6 +6,8 @@ import pandas as pd
 import pyrootutils
 from omegaconf import DictConfig
 from sklearn.model_selection import train_test_split
+
+from src.utils.utils import create_dataset_dir, remove_dir
 
 root = pyrootutils.setup_root(
     search_from=__file__,
@@ -20,7 +20,7 @@ from src import utils  # noqa: E402
 log = utils.get_pylogger(__name__)
 
 
-def get_dataset_df(dataset_dir: str) -> pd.DataFrame:
+def get_dataset_df(dataset_dir: Path) -> pd.DataFrame:
     """
     Get the dataset dataframe from the dataset directory.
     """
@@ -31,28 +31,6 @@ def get_dataset_df(dataset_dir: str) -> pd.DataFrame:
             datasets[class_dir_path.name].append(file_path)
 
     return pd.DataFrame(datasets)
-
-
-def create_dataset_dir(dataset_split_dir: Path, dataset_df: pd.DataFrame) -> None:
-    dataset_split_dir.mkdir(parents=True, exist_ok=True)
-    for dir_name in dataset_df.columns:
-        os.makedirs(dataset_split_dir / dir_name, exist_ok=True)
-        for file_path in dataset_df[dir_name]:
-            file_name = file_path.name
-            new_file_path = dataset_split_dir / dir_name / file_name
-            if not new_file_path.exists():
-                os.symlink(file_path, new_file_path)
-
-
-def remove_dir(dir_path: Path) -> None:
-    if dir_path.exists():
-        log.info(f"Removing directory: {dir_path}")
-        try:
-            shutil.rmtree(dir_path)
-        except OSError as e:
-            print(f"Error: {e.strerror}")
-    else:
-        log.info(f"Directory does not exist: {dir_path}")
 
 
 @hydra.main(config_path=str(root / "configs"), config_name="train", version_base="1.3")
