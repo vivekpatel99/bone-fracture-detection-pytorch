@@ -5,6 +5,7 @@
 defaults:
   - _self_
   - data: default
+  - datamodule: lung_colon_datamodule
   - paths: default
   - extras: default
   - hydra: default

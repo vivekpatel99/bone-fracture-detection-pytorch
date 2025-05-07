@@ -1,0 +1,31 @@
+_target_: src.datamodules.lung_colon_datamodule.LungColonDataModule
+defaults:
+  - default
+
+augmentations:
+  - _target_: torchvision.transforms.v2.ToImage
+    # Convert to tensor, only needed if you had a PIL image
+  - _target_: torchvision.transforms.v2.RandomHorizontalFlip
+  - _target_: torchvision.transforms.v2.RandomVerticalFlip
+  - _target_: torchvision.transforms.v2.RandomRotation
+    degrees: [-15, 15]
+
+  - _target_: torchvision.transforms.v2.ColorJitter
+    brightness: 0.2
+    contrast: 0.2
+    saturation: 0.2
+    hue: 0.2
+
+  - _target_: torchvision.transforms.v2.GaussianBlur
+    kernel_size: [5, 9]
+    sigma: [0.1, 5]
+
+  - _target_: torchvision.transforms.v2.ToDtype
+    dtype: ${torch_dtype:'float32'} # Or directly 'torch.float32' if not using a resolver
+    scale: True
+
+valid_transforms:
+  - _target_: torchvision.transforms.v2.ToImage
+  - _target_: torchvision.transforms.v2.ToDtype
+    dtype: ${torch_dtype:'float32'}
+    scale: True

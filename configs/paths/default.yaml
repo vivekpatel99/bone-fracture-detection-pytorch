@@ -21,11 +21,11 @@ output_dir: ${hydra:runtime.output_dir}
 work_dir: ${hydra:runtime.cwd}
 
 # raw data directory
-train_processed_dir: ${data.dataset_dir}/processed/train
-valid_processed_dir: ${data.dataset_dir}/processed/valid
-test_processed_dir: ${data.dataset_dir}/processed/test
-
-# processed data directory
 train_raw_dir: ${data.dataset_dir}/raw/train
 valid_raw_dir: ${data.dataset_dir}/raw/valid
 test_raw_dir: ${data.dataset_dir}/raw/test
+
+# processed data directory
+train_processed_dir: ${data.dataset_dir}/processed/train
+valid_processed_dir: ${data.dataset_dir}/processed/valid
+test_processed_dir: ${data.dataset_dir}/processed/test

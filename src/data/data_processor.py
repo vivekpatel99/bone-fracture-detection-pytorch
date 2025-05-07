@@ -31,6 +31,7 @@ def data_preprocessor(cfg: DictConfig) -> None:
     train_processed_dir = Path(root) / cfg.paths.train_processed_dir
     utils.remove_dir(train_processed_dir)
     log.info("Old train preprocessed dir removed")
+    log.info(f"Instantiating train transforms <{cfg.data.train_preprocess_transforms._target_}>")
     train_transforms = hydra.utils.instantiate(cfg.data.train_preprocess_transforms)
     train_processed_dir.mkdir(parents=True, exist_ok=True)
     train_dataset = ImageFolder(
@@ -47,6 +48,7 @@ def data_preprocessor(cfg: DictConfig) -> None:
     valid_processed_dir = Path(root) / cfg.paths.valid_processed_dir
     utils.remove_dir(valid_processed_dir)
     log.info("Old valid preprocessed dir removed")
+    log.info(f"Instantiating valiidation transforms <{cfg.data.valid_preprocess_transforms._target_}>")
     valid_transforms = hydra.utils.instantiate(cfg.data.valid_preprocess_transforms)
     valid_processed_dir.mkdir(parents=True, exist_ok=True)
     valid_dataset = ImageFolder(
