@@ -172,7 +172,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-notebooks/*.csv7bff6546e3548ce48e65cc6c848ce9bc
+notebooks/*.csv
 data/*.csv
 *.pkl
 artifact/
@@ -183,3 +183,4 @@ logs
 .vscode/tasks.json.dvc
 datasets
 kaggle.json
+notebooks/lightning_logs
