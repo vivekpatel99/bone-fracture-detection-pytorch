@@ -184,3 +184,7 @@ logs
 datasets
 kaggle.json
 notebooks/lightning_logs
+ml-runs/
+outputs/
+test_sweeper.py
+configs/test_config.yaml

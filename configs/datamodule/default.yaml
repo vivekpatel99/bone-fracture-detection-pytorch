@@ -7,3 +7,4 @@ persistent_workers: True
 train_processed_dir: ${paths.train_processed_dir}
 valid_processed_dir: ${paths.valid_processed_dir}
 test_processed_dir: ${paths.test_processed_dir}
+subset_size: null

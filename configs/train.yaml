@@ -1,5 +1,3 @@
-# @package _global_
-
 # specify here default configuration
 # order of defaults determines the order in which configs override each other
 defaults:
@@ -9,8 +7,16 @@ defaults:
   - paths: default
   - extras: default
   - hydra: default
-  # - models: default
+  - logger: mlflow
+  - model: default
   - trainer: default
+
+  # experiment configs allow for version control of specific hyperparameters
+  # e.g. best hyperparameters for given model and datamodule
+  - experiment: null
+
+  # config for hyperparameter optimization
+  - hparams_search: null
 
   # model config (enable through command line, e.g. `python train.py model=default`)-
 

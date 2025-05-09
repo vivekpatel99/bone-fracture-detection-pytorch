@@ -1,4 +1,4 @@
-_target_: src.datamodules.lung_colon_datamodule.LungColonDataModule
+_target_: src.datamodule.lung_colon_cancer_datamodule.LungColonCancerDataModule
 defaults:
   - default
 
