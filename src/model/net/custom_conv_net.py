@@ -1,22 +1,24 @@
 import torch
 from torch import nn
+from torchinfo import summary
 
 
 class CustomConvNet(nn.Module):
     def __init__(
         self,
         input_shape: tuple[int, int, int],
-        conv_layers: list[int],
+        conv_layers: int,
         num_classes: int,
         dropout_rate: float,
         num_hidden_layers: int,
     ) -> None:
         super().__init__()
         input_dim = input_shape[0]
-        self.output_dims = conv_layers
         layers: list[nn.Module] = []
+
         # --- Convolutional layers
-        for out_dim in conv_layers:
+        _total_conv_layers = [x * 32 for x in range(1, conv_layers)]
+        for out_dim in _total_conv_layers:
             layers.append(nn.Conv2d(input_dim, out_dim, kernel_size=3, stride=1, padding=1, bias=False))
             layers.append(nn.BatchNorm2d(out_dim))
             layers.append(nn.ReLU())
@@ -52,3 +54,16 @@ class CustomConvNet(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.model(x)
+
+
+if __name__ == "__main__":
+    input_shape = (1, 3, 320, 320)
+
+    net = CustomConvNet(
+        input_shape=input_shape[1:],
+        conv_layers=5,
+        dropout_rate=0.5,
+        num_classes=5,
+        num_hidden_layers=4,
+    )
+    summary(net, input_shape, device="cpu")
