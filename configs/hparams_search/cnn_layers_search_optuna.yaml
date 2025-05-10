@@ -4,12 +4,12 @@ defaults:
   - _self_ # Include the rest of this file's content
 
 hydra:
-  mode: "MULTIRUN" # set hydra to multirun by default if this config is attached
+  # mode: "MULTIRUN" # set hydra to multirun by default if this config is attached
   # optuna hyperparameter search
   sweeper:
     _target_: hydra_plugins.hydra_optuna_sweeper.optuna_sweeper.OptunaSweeper
     direction: minimize
-    study_name: "" #${experiment.logger.mlflow.experiment_name}
+    study_name: ${logger.experiment_name}
     storage: null
     n_trials: 5
     n_jobs: 1

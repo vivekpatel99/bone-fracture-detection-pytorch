@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/hp_finding/hp_finder.py",
             "console": "integratedTerminal",
-            "args": " hparams_search=cnn_layers_search_optuna experiment=find_cnn_layers",
+            "args": "-m hparams_search=cnn_layers_search_optuna experiment=find_cnn_layers",
             "env":
             {
                 "HYDRA_FULL_ERROR": "1"

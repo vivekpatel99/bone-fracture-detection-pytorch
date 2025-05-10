@@ -1,7 +1,8 @@
-__target__: src.model.nets.custom_conv_net
+_target_: src.model.net.custom_conv_net.CustomConvNet
 input_shape: null
 conv_layers: null
 dropout_rate: null
 num_hidden_layers: null
-#  TODO: instantiate using length of class_names
-num_classes: 5 #  ${model.num_classes}
+num_classes:
+  5
+  # _target_: len(${model.class_names})

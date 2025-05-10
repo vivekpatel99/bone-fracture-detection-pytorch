@@ -6,9 +6,10 @@ defaults:
   - datamodule: lung_colon_datamodule
   - paths: default
   - extras: default
+  - callbacks: default
   - hydra: default
-  - logger: mlflow
-  - model: default
+  - logger: mlflow_logger
+  - model: lung_colon_cancer_classifier
   - trainer: default
 
   # experiment configs allow for version control of specific hyperparameters
@@ -18,12 +19,10 @@ defaults:
   # config for hyperparameter optimization
   - hparams_search: null
 
-  # model config (enable through command line, e.g. `python train.py model=default`)-
-
   # debugging config (enable through command line, e.g. `python train.py debug=default)
   - debug: null
 
-# task name, determines output directory path
+# task name, determines output directory path - configured in hydra/default.yaml
 task_name: "train"
 
 # tags to help you identify your experiments

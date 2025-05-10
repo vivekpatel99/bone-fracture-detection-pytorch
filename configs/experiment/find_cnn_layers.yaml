@@ -14,24 +14,27 @@ model:
     weight_decay: 0.0001
   net:
     conv_layers: 2
-    num_classes: 10
+    num_classes: 5
     dropout_rate: 0.1
     num_hidden_layers: 1
 
 datamodule:
   batch_size: 32
+  subset_size: 0.4
 
-logger:
-  mlflow:
-    experiment_name: "find_cnn_layers"
-    tags: ["find_cnn_layers"]
-    tracking_uri: "file://mlruns"
-    tracking_server: "http://localhost:5000"
-    experiment_id: 1
-    run_name: "find_cnn_layers_run"
-    log_model: True
-    log_graph: True
-    log_hyperparams: True
-    log_artifacts: True
-    log_metrics: True
-    log_params: True
+task_name: "experiment"
+
+mlflow_params:
+  experiment_name: "find_cnn_layers"
+  tags: ["find_cnn_layers"]
+
+  # tracking_uri: "file://mlruns"
+  # tracking_server: "http://localhost:5000"
+
+  # run_name: "find_cnn_layers_run"
+  # log_model: True
+  # log_graph: True
+  # log_hyperparams: True
+  # log_artifacts: True
+  # log_metrics: True
+  # log_params: True

@@ -1,6 +1,6 @@
-__target__: src/model/lung_colon_cancer_classifier
+_target_: src.model.lung_colon_cancer_classifier.LungColonCancerClassifier
 defaults:
-  - defaults
+  - default
   - net: custom_conv_net
 
 class_names:
@@ -11,4 +11,41 @@ class_names:
     "lung-benign-tissue",
     "lung-squamous-cell-carcinoma",
   ]
-#  optimizer  and scheduler will be taken from defaults
+criterion:
+  _target_: torch.nn.CrossEntropyLoss
+  _partial_: true
+
+accuracy:
+  _target_: torchmetrics.Accuracy
+  task: multiclass
+  num_classes:
+    5
+    # _target_: builtins.len
+    # _args_:
+    #   - ${model.classifier.class_names}
+
+f1_score:
+  _target_: torchmetrics.F1Score
+  task: multiclass
+  num_classes:
+    5
+    # _target_: builtins.len
+    # _args_:
+    # - ${model.classifier.class_names}
+    #  optimizer  and scheduler will be taken from defaults
+
+  # accuracy:
+  #   _target_: torchmetrics.Accuracy
+  #   task: multiclass
+  #   num_classes:
+  #     _target_: builtins.len
+  #     _args_:
+  #       - ${model.classifier.class_names}
+
+  # f1_score:
+  #   _target_: torchmetrics.F1Score
+  #   task: multiclass
+  #   num_classes:
+  #     _target_: builtins.len
+  #     _args_:
+  #       - ${model.classifier.class_names}

@@ -1,12 +1,16 @@
 from typing import Any
 
 import hydra
-import lightning as pl
 import numpy as np
+import pytorch_lightning as pl
 import torch
 from torch.utils.data import DataLoader
 from torchvision.datasets import ImageFolder
 from torchvision.transforms import v2
+
+from src import utils
+
+log = utils.get_pylogger(__name__)
 
 
 class LungColonCancerDataModule(pl.LightningDataModule):
@@ -42,9 +46,10 @@ class LungColonCancerDataModule(pl.LightningDataModule):
         self.train_data_dir = train_processed_dir
         self.valid_data_dir = valid_processed_dir
         self.test_data_dir = test_processed_dir
+        self.subset_size = subset_size
+
         self.augmentations = None
         self.valid_transforms = None
-        self.subset_size = subset_size
         if augmentations:
             aug = hydra.utils.instantiate(augmentations)
             self.augmentations = v2.Compose(aug)
@@ -59,10 +64,7 @@ class LungColonCancerDataModule(pl.LightningDataModule):
             "persistent_workers": persistent_workers,
         }
 
-    def prepare_data(self):
-        pass
-
-    def subset_indices(self, dataset, subset_size) -> np.ndarray:
+    def subset_indices(self, dataset) -> np.ndarray:
         train_ds_len = len(dataset)
         indices = np.arange(len(dataset))[: int(train_ds_len * self.subset_size)]
         return indices
@@ -74,13 +76,13 @@ class LungColonCancerDataModule(pl.LightningDataModule):
         self.test_dataset = ImageFolder(root=self.test_data_dir, transform=self.valid_transforms)
 
         if self.subset_size:
-            print(f"Using subset of size {self.subset_size} for training, validation, and testing.")
+            log.info(f"Using subset of size {self.subset_size} for training, validation, and testing.")
             # Subset the dataset
-            train_indices = self.subset_indices(self.train_dataset, self.subset_size)
+            train_indices = self.subset_indices(self.train_dataset)
             self.train_dataset = torch.utils.data.Subset(self.train_dataset, train_indices)
-            val_indices = self.subset_indices(self.val_dataset, self.subset_size)
+            val_indices = self.subset_indices(self.val_dataset)
             self.val_dataset = torch.utils.data.Subset(self.val_dataset, val_indices)
-            test_indices = self.subset_indices(self.test_dataset, self.subset_size)
+            test_indices = self.subset_indices(self.test_dataset)
             self.test_dataset = torch.utils.data.Subset(self.test_dataset, test_indices)
 
     def train_dataloader(self) -> DataLoader:

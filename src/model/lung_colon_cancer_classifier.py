@@ -1,11 +1,8 @@
-import os
 from typing import Any
 
-import lightning as pl
 import pyrootutils
+import pytorch_lightning as pl
 import torch
-import torch.nn.functional as F
-from fastapi import params
 from torchmetrics import Accuracy, F1Score, Metric
 
 root = pyrootutils.setup_root(
@@ -14,13 +11,15 @@ root = pyrootutils.setup_root(
     pythonpath=True,
     dotenv=True,
 )
+from src import utils  # noqa: E402
+
+log = utils.get_pylogger(__name__)
 
 
 from src.model.net.custom_conv_net import CustomConvNet  # noqa: E402
 from src.model.net.net_model import Net  # noqa: E402
 
 
-# TODO: take  out optimizer and scheduler from the constructor
 class LungColonCancerClassifier(pl.LightningModule):
     def __init__(
         self,
@@ -33,17 +32,17 @@ class LungColonCancerClassifier(pl.LightningModule):
         scheduler: Any | None = None,
     ):
         super().__init__()
-        self.model = net
+        self.net = net
         self.optimizer = optimizer  # torch.optim.AdamW(model.parameters(), lr=1e-3)
         self.scheduler = scheduler
 
         self.num_classes = len(class_names)
         self.accuracy = accuracy  # Accuracy(task="multiclass", num_classes=self.num_classes)
         self.f1_score = f1_score  # F1Score(task="multiclass", num_classes=self.num_classes)
-        self.criterion = criterion  # torch.nn.CrossEntropyLoss()
+        self.criterion = criterion()  # torch.nn.CrossEntropyLoss()
 
     def forward(self, x) -> torch.Tensor:
-        return self.model(x)
+        return self.net(x)
 
     def _common_step(self, batch, batch_idx) -> tuple[torch.Tensor, float, torch.Tensor]:
         x, y = batch
@@ -81,36 +80,16 @@ class LungColonCancerClassifier(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = self.optimizer(params=self.parameters())
+        if self.scheduler is not None:
+            # TODO: add support for schedulers
+            scheduler = self.scheduler(optimizer)
+            return {
+                "optimizer": optimizer,
+                "lr_scheduler": {
+                    "scheduler": scheduler,
+                    "monitor": "val/loss",
+                    "interval": "epoch",
+                    "frequency": 1,
+                },
+            }
         return {"optimizer": optimizer}
-
-
-if __name__ == "__main__":
-    class_names = [
-        "colon-adenocarcinoma",
-        "colon-benign-tissue",
-        "lung-adenocarcinoma",
-        "lung-benign-tissue",
-        "lung-squamous-cell-carcinoma",
-    ]
-    net = CustomConvNet(
-        input_shape=(3, 320, 320),
-        conv_layers=5,
-        dropout_rate=0.1,
-        num_classes=5,
-        num_hidden_layers=5,
-    )
-    # # Create the optimizer
-    # optimizer = torch.optim.AdamW
-
-    # Create the scheduler
-    # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
-
-    model = LungColonCancerClassifier(
-        net=net,
-        class_names=class_names,
-        criterion=torch.nn.CrossEntropyLoss(),
-        accuracy=Accuracy(task="multiclass", num_classes=len(class_names)),
-        f1_score=F1Score(task="multiclass", num_classes=len(class_names)),
-        optimizer=torch.optim.AdamW,
-        scheduler=None,  # torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
-    )

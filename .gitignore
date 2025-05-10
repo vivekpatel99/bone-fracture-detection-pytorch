@@ -188,3 +188,4 @@ ml-runs/
 outputs/
 test_sweeper.py
 configs/test_config.yaml
+lightning_logs
