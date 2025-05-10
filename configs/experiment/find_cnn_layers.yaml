@@ -5,8 +5,8 @@
 tags: ["find_cnn_layers"]
 
 trainer:
-  min_epochs: 10
-  max_epochs: 10
+  min_epochs: 1
+  max_epochs: 2
 
 model:
   optimizer:
