@@ -25,18 +25,18 @@ class LungColonCancerClassifier(pl.LightningModule):
         self,
         net: torch.nn.Module,
         class_names: list[str],
-        compile: bool,
+        is_compile: bool,
         optimizer: torch.optim.Optimizer,
         scheduler: Any | None = None,
     ):
         super().__init__()
         self.net = net
+        # self.learning_rate = learning_rate
         self.optimizer = optimizer  # torch.optim.AdamW(model.parameters(), lr=1e-3)
         self.scheduler = scheduler
-        self.compile = compile
+        self.is_compile = is_compile
         self.criterion = torch.nn.CrossEntropyLoss()
         self.num_classes = len(class_names)
-
         self.train_acc = Accuracy(task="multiclass", num_classes=self.num_classes)
         self.valid_acc = Accuracy(task="multiclass", num_classes=self.num_classes)
         self.test_acc = Accuracy(task="multiclass", num_classes=self.num_classes)
@@ -53,6 +53,7 @@ class LungColonCancerClassifier(pl.LightningModule):
         self.save_hyperparameters(logger=False)
         # for tracking best so far validation accuracy
         self.val_acc_best = MaxMetric()
+        self.val_f1_best = MaxMetric()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Perform a forward pass through the model `self.net`.
@@ -73,7 +74,6 @@ class LungColonCancerClassifier(pl.LightningModule):
         """Lightning hook that is called when training begins."""
         # by default lightning executes validation step sanity checks before training starts,
         # so it's worth to make sure validation metrics don't store results from these checks
-
         self.train_acc.reset()
         self.valid_acc.reset()
         self.test_acc.reset()
@@ -88,6 +88,8 @@ class LungColonCancerClassifier(pl.LightningModule):
         self.train_acc(preds, targets)
         self.log("train/loss", self.train_loss, on_step=False, on_epoch=True, prog_bar=True)
         self.log("train/acc", self.train_acc, on_step=False, on_epoch=True, prog_bar=True)
+        self.train_f1_sc(preds, targets)
+        self.log("train/f1_score", self.train_f1_sc, on_step=False, on_epoch=True, prog_bar=True)
         return loss
 
     def on_train_epoch_end(self) -> None:
@@ -100,6 +102,9 @@ class LungColonCancerClassifier(pl.LightningModule):
         self.valid_acc(preds, targets)
         self.log("val/loss", self.valid_loss, on_step=False, on_epoch=True, prog_bar=True)
         self.log("val/acc", self.valid_acc, on_step=False, on_epoch=True, prog_bar=True)
+
+        self.valid_f1_sc(preds, targets)
+        self.log("val/f1_score", self.valid_f1_sc, on_step=False, on_epoch=True, prog_bar=True)
         return loss
 
     def on_validation_epoch_end(self) -> None:
@@ -110,6 +115,9 @@ class LungColonCancerClassifier(pl.LightningModule):
         # otherwise metric would be reset by lightning after each epoch
         self.log("val/acc_best", self.val_acc_best.compute(), sync_dist=True, prog_bar=True)
 
+        self.val_f1_best(self.valid_f1_sc.compute())
+        self.log("val/f1_score_best", self.val_f1_best.compute(), sync_dist=True, prog_bar=True)
+
     def test_step(self, batch, batch_idx) -> None:
         loss, preds, targets = self._common_step(batch)
         # update and log metrics
@@ -117,6 +125,9 @@ class LungColonCancerClassifier(pl.LightningModule):
         self.test_acc(preds, targets)
         self.log("test/loss", self.test_loss, on_step=False, on_epoch=True, prog_bar=True)
         self.log("test/acc", self.test_acc, on_step=False, on_epoch=True, prog_bar=True)
+
+        self.test_f1_sc(preds, targets)
+        self.log("test/f1_score", self.test_f1_sc, on_step=False, on_epoch=True, prog_bar=True)
 
     def setup(self, stage: str) -> None:
         """Lightning hook that is called at the beginning of fit (train + validate), validate,
@@ -127,13 +138,12 @@ class LungColonCancerClassifier(pl.LightningModule):
 
         :param stage: Either `"fit"`, `"validate"`, `"test"`, or `"predict"`.
         """
-        if self.compile and stage == "fit":
+        if self.is_compile and stage == "fit":
             self.net = torch.compile(self.net)
 
     def configure_optimizers(self):
         optimizer = self.hparams.optimizer(params=self.parameters())
         if self.hparams.scheduler is not None:
-            # TODO: add support for schedulers
             scheduler = self.hparams.scheduler(optimizer)
             return {
                 "optimizer": optimizer,

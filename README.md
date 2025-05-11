@@ -186,3 +186,6 @@ it was developed and tested on the following hardware:
 While these specifications are recommended for optimal performance, the project can be adapted to run on systems with less powerful hardware.
 
 ## 📚 Reference
+
+1. [hydra-example-project](https://github.com/FlorianWilhelm/hydra-example-project)
+2. [Lung and Colon Cancer Histopathological Images](https://www.kaggle.com/datasets/andrewmvd/lung-and-colon-cancer-histopathological-images/data)

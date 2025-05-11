@@ -2,7 +2,7 @@ _target_: src.model.lung_colon_cancer_classifier.LungColonCancerClassifier
 defaults:
   - default
   - net: custom_conv_net
-compile: true
+is_compile: true
 class_names:
   [
     "colon-adenocarcinoma",

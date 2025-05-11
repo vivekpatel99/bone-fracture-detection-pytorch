@@ -6,11 +6,11 @@ tags: ["find_cnn_layers"]
 
 trainer:
   min_epochs: 1
-  max_epochs: 2 #20
+  max_epochs: 20
 
 model:
   optimizer:
-    lr: 0.001
+    lr: 0.01
     weight_decay: 0.0001
   net:
     conv_layers: 2
@@ -19,7 +19,7 @@ model:
     num_hidden_layers: 1
 
 datamodule:
-  batch_size: 32
+  batch_size: 64
   subset_size: 0.5
 
 task_name: "experiment"

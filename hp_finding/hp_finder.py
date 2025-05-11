@@ -1,16 +1,13 @@
 #  uv run  -m hp_finding/hp_finder.py hparams_search=cnn_layers_search_optuna experiment=find_cnn_layers
 #  python hp_finding/hp_finder.py hparams_search=cnn_layers_search_optuna experiment=find_cnn_layers
 #  mlflow ui --backend-store-uri logs/mlflow/mlruns/
-import os
-from pathlib import Path
-from typing import Any
+from typing import Any, List
 
 import hydra
-import mlflow
 import pyrootutils
 import pytorch_lightning as pl
 import torch
-from omegaconf import DictConfig, OmegaConf
+from omegaconf import DictConfig
 
 root = pyrootutils.setup_root(
     search_from=__file__,
@@ -19,6 +16,7 @@ root = pyrootutils.setup_root(
     dotenv=True,
 )
 from src import utils  # noqa: E402
+from src.utils.instantiators import instantiate_callbacks  # noqa: E402
 from src.utils.utils import extras, get_metric_value  # noqa: E402
 
 log = utils.get_pylogger(__name__)
@@ -34,15 +32,6 @@ def net_hp_finder(cfg: DictConfig) -> dict[str, Any]:
     ml_logger = hydra.utils.instantiate(cfg.logger)
 
     log.info(f"Instantiating Net with experiment config <{cfg.model.net._target_}>")
-    input_shape = [3] + hydra.utils.instantiate(cfg.data.train_preprocess_transforms[1].size)
-    net = hydra.utils.instantiate(
-        cfg.model.net,
-        input_shape=input_shape,
-        conv_layers=cfg.model.net.conv_layers,
-        dropout_rate=cfg.model.net.dropout_rate,
-        num_classes=cfg.model.net.num_classes,
-        num_hidden_layers=cfg.model.net.num_hidden_layers,
-    )
     params = {
         "subset_size": cfg.datamodule.subset_size,
         "batch_size": cfg.datamodule.batch_size,
@@ -53,16 +42,27 @@ def net_hp_finder(cfg: DictConfig) -> dict[str, Any]:
     }
     ml_logger.log_hyperparams(params)
 
+    input_shape = [3] + hydra.utils.instantiate(cfg.data.train_preprocess_transforms[1].size)
+    net = hydra.utils.instantiate(
+        cfg.model.net,
+        input_shape=input_shape,
+        conv_layers=cfg.model.net.conv_layers,
+        dropout_rate=cfg.model.net.dropout_rate,
+        num_classes=cfg.model.net.num_classes,
+        num_hidden_layers=cfg.model.net.num_hidden_layers,
+    )
     log.info(f"Instantiating model <{cfg.model._target_}>")
     model: pl.LightningModule = hydra.utils.instantiate(cfg.model, net=net)
+
     log.info(f"Instantiating data_module <{cfg.datamodule._target_}>")
     data_module: pl.LightningDataModule = hydra.utils.instantiate(
         cfg.datamodule, subset_size=cfg.datamodule.subset_size, batch_size=cfg.datamodule.batch_size
     )
-    log.info("Instantiating loggers...")
-    # logger: list[Logger] = instantiate_loggers(cfg.get("logger"))
+    log.info("Instantiating callbacks...")
+    callbacks: List[pl.Callback] = instantiate_callbacks(cfg.get("callbacks"))
+
     log.info(f"Instantiating trainer <{cfg.trainer._target_}>")
-    trainer: pl.Trainer = hydra.utils.instantiate(cfg.trainer, logger=ml_logger)
+    trainer: pl.Trainer = hydra.utils.instantiate(cfg.trainer, logger=ml_logger, callbacks=callbacks)
 
     if cfg.get("train"):
         log.info("Starting training!")
