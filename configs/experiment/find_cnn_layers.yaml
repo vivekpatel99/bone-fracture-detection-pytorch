@@ -6,7 +6,7 @@ tags: ["find_cnn_layers"]
 
 trainer:
   min_epochs: 1
-  max_epochs: 2
+  max_epochs: 2 #20
 
 model:
   optimizer:
@@ -20,21 +20,10 @@ model:
 
 datamodule:
   batch_size: 32
-  subset_size: 0.4
+  subset_size: 0.5
 
 task_name: "experiment"
 
 mlflow_params:
   experiment_name: "find_cnn_layers"
   tags: ["find_cnn_layers"]
-
-  # tracking_uri: "file://mlruns"
-  # tracking_server: "http://localhost:5000"
-
-  # run_name: "find_cnn_layers_run"
-  # log_model: True
-  # log_graph: True
-  # log_hyperparams: True
-  # log_artifacts: True
-  # log_metrics: True
-  # log_params: True

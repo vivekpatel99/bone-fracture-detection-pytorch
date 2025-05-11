@@ -20,12 +20,12 @@ augmentations:
     kernel_size: [5, 9]
     sigma: [0.1, 5]
 
-  - _target_: torchvision.transforms.v2.ToDtype
-    dtype: ${torch_dtype:'float32'} # Or directly 'torch.float32' if not using a resolver
-    scale: True
+  # - _target_: torchvision.transforms.v2.ToDtype
+  #   dtype: ${torch_dtype:float32} # Or directly 'torch.float32' if not using a resolver
+  #   scale: True
 
 valid_transforms:
   - _target_: torchvision.transforms.v2.ToImage
-  - _target_: torchvision.transforms.v2.ToDtype
-    dtype: ${torch_dtype:'float32'}
-    scale: True
+  # - _target_: torchvision.transforms.v2.ToDtype
+  #   dtype: ${torch_dtype:float32}
+  #   scale: True

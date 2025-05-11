@@ -4,6 +4,7 @@ import hydra
 import numpy as np
 import pytorch_lightning as pl
 import torch
+from matplotlib.pyplot import sca
 from torch.utils.data import DataLoader
 from torchvision.datasets import ImageFolder
 from torchvision.transforms import v2
@@ -52,9 +53,11 @@ class LungColonCancerDataModule(pl.LightningDataModule):
         self.valid_transforms = None
         if augmentations:
             aug = hydra.utils.instantiate(augmentations)
+            aug += [v2.ToDtype(dtype=torch.float32, scale=True)]
             self.augmentations = v2.Compose(aug)
         if valid_transforms:
             transforms = hydra.utils.instantiate(valid_transforms)
+            transforms += [v2.ToDtype(dtype=torch.float32, scale=True)]
             self.valid_transforms = v2.Compose(transforms)
 
         self.kwargs = {

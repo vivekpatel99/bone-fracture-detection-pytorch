@@ -1,6 +1,6 @@
 # For Dataloader
 batch_size: 32
-num_workers: 8
+num_workers: 4
 # shuffle is already set in the dataloader
 pin_memory: True
 persistent_workers: True
