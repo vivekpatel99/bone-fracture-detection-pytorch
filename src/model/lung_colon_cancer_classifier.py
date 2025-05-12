@@ -16,10 +16,6 @@ from src import utils  # noqa: E402
 log = utils.get_pylogger(__name__)
 
 
-from src.model.net.custom_conv_net import CustomConvNet  # noqa: E402
-from src.model.net.net_model import Net  # noqa: E402
-
-
 class LungColonCancerClassifier(pl.LightningModule):
     def __init__(
         self,
@@ -27,13 +23,15 @@ class LungColonCancerClassifier(pl.LightningModule):
         class_names: list[str],
         is_compile: bool,
         optimizer: torch.optim.Optimizer,
+        lr: float | None = None,
         scheduler: Any | None = None,
     ):
         super().__init__()
         self.net = net
         # self.learning_rate = learning_rate
-        self.optimizer = optimizer  # torch.optim.AdamW(model.parameters(), lr=1e-3)
+        self.optimizer = optimizer
         self.scheduler = scheduler
+        self.lr = lr
         self.is_compile = is_compile
         self.criterion = torch.nn.CrossEntropyLoss()
         self.num_classes = len(class_names)
@@ -142,7 +140,7 @@ class LungColonCancerClassifier(pl.LightningModule):
             self.net = torch.compile(self.net)
 
     def configure_optimizers(self):
-        optimizer = self.hparams.optimizer(params=self.parameters())
+        optimizer = self.hparams.optimizer(params=self.parameters(), lr=self.lr or self.hparams.lr)
         if self.hparams.scheduler is not None:
             scheduler = self.hparams.scheduler(optimizer)
             return {

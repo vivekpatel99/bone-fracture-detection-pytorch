@@ -48,7 +48,8 @@ class LungColonCancerDataModule(pl.LightningDataModule):
         self.valid_data_dir = valid_processed_dir
         self.test_data_dir = test_processed_dir
         self.subset_size = subset_size
-
+        self.save_hyperparameters()
+        self.batch_size = batch_size
         self.augmentations = None
         self.valid_transforms = None
         if augmentations:
@@ -61,7 +62,6 @@ class LungColonCancerDataModule(pl.LightningDataModule):
             self.valid_transforms = v2.Compose(transforms)
 
         self.kwargs = {
-            "batch_size": batch_size,
             "num_workers": num_workers,
             "pin_memory": pin_memory,
             "persistent_workers": persistent_workers,
@@ -79,7 +79,7 @@ class LungColonCancerDataModule(pl.LightningDataModule):
         self.test_dataset = ImageFolder(root=self.test_data_dir, transform=self.valid_transforms)
 
         if self.subset_size:
-            log.info(f"Using subset of size {self.subset_size} for training, validation, and testing.")
+            log.warning(f"Using subset of size {self.subset_size} for training, validation, and testing.")
             # Subset the dataset
             train_indices = self.subset_indices(self.train_dataset)
             self.train_dataset = torch.utils.data.Subset(self.train_dataset, train_indices)
@@ -92,17 +92,20 @@ class LungColonCancerDataModule(pl.LightningDataModule):
         return DataLoader(
             self.train_dataset,
             shuffle=True,
+            batch_size=self.batch_size | self.hparams.batch_size,
             **self.kwargs,
         )
 
     def val_dataloader(self) -> DataLoader:
         return DataLoader(
             self.val_dataset,
+            batch_size=self.batch_size | self.hparams.batch_size,
             **self.kwargs,
         )
 
     def test_dataloader(self) -> DataLoader:
         return DataLoader(
             self.test_dataset,
+            batch_size=self.batch_size | self.hparams.batch_size,
             **self.kwargs,
         )

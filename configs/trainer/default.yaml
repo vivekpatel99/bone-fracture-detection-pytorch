@@ -2,7 +2,7 @@ _target_: pytorch_lightning.Trainer
 
 default_root_dir: ${paths.output_dir}
 
-max_epochs: 20
+max_epochs: 30
 
 accelerator: "gpu"
 devices: 1
@@ -16,4 +16,4 @@ log_every_n_steps: 50
 
 # set True to to ensure deterministic results
 # makes training slower but gives more reproducibility than just setting seeds
-deterministic: True
+deterministic: False
