@@ -1,0 +1,164 @@
+task_name: train
+tags:
+  - dev
+optimized_metric: val/acc_best
+monitor_metric: val/loss
+monitor_direction: min
+batch_size_finder: false
+lr_finder: false
+train: true
+test: true
+ckpt_path: null
+seed: 42
+data:
+  valid_ds_size: 0.2
+  test_ds_size: 0.1
+  train_preprocess_transforms:
+    - _target_: torchvision.transforms.v2.ToImage
+    - _target_: torchvision.transforms.v2.Resize
+      size:
+        - 320
+        - 320
+      antialias: true
+  valid_preprocess_transforms:
+    - _target_: torchvision.transforms.v2.ToImage
+    - _target_: torchvision.transforms.v2.Resize
+      size:
+        - 320
+        - 320
+      antialias: true
+  dataset_dir: datasets
+  dataset_name: lung-and-colon-cancer-histopathological-images
+  dataset_url: https://www.kaggle.com/datasets/andrewmvd/lung-and-colon-cancer-histopathological-images/data
+datamodule:
+  batch_size: 128
+  num_workers: 8
+  pin_memory: true
+  persistent_workers: true
+  train_processed_dir: ${paths.train_processed_dir}
+  valid_processed_dir: ${paths.valid_processed_dir}
+  test_processed_dir: ${paths.test_processed_dir}
+  subset_size: null
+  _target_: src.datamodule.lung_colon_cancer_datamodule.LungColonCancerDataModule
+  augmentations:
+    - _target_: torchvision.transforms.v2.ToImage
+    - _target_: torchvision.transforms.v2.RandomHorizontalFlip
+    - _target_: torchvision.transforms.v2.RandomVerticalFlip
+    - _target_: torchvision.transforms.v2.RandomRotation
+      degrees:
+        - -15
+        - 15
+    - _target_: torchvision.transforms.v2.ColorJitter
+      brightness: 0.2
+      contrast: 0.2
+      saturation: 0.2
+      hue: 0.2
+    - _target_: torchvision.transforms.v2.GaussianBlur
+      kernel_size:
+        - 5
+        - 9
+      sigma:
+        - 0.1
+        - 5
+  valid_transforms:
+    - _target_: torchvision.transforms.v2.ToImage
+paths:
+  root_dir: ${oc.env:PROJECT_ROOT}
+  results_dir: ${paths.root_dir}/results
+  log_dir: ${paths.root_dir}/logs/
+  output_dir: ${hydra:runtime.output_dir}
+  work_dir: ${hydra:runtime.cwd}
+  train_raw_dir: ${data.dataset_dir}/raw/train
+  valid_raw_dir: ${data.dataset_dir}/raw/valid
+  test_raw_dir: ${data.dataset_dir}/raw/test
+  train_processed_dir: ${data.dataset_dir}/processed/train
+  valid_processed_dir: ${data.dataset_dir}/processed/valid
+  test_processed_dir: ${data.dataset_dir}/processed/test
+extras:
+  ignore_warnings: false
+  enforce_tags: true
+  print_config: true
+callbacks:
+  model_checkpoint:
+    _target_: pytorch_lightning.callbacks.ModelCheckpoint
+    dirpath: ${paths.output_dir}/checkpoints
+    filename: epoch_{epoch:03d}
+    monitor: ${monitor_metric}
+    verbose: false
+    save_last: true
+    save_top_k: 1
+    mode: ${monitor_direction}
+    auto_insert_metric_name: false
+    save_weights_only: false
+    every_n_train_steps: null
+    train_time_interval: null
+    every_n_epochs: null
+    save_on_train_epoch_end: null
+  early_stopping:
+    _target_: pytorch_lightning.callbacks.EarlyStopping
+    monitor: ${monitor_metric}
+    min_delta: 0.0
+    patience: 100
+    verbose: false
+    mode: ${monitor_direction}
+    strict: true
+    check_finite: true
+    stopping_threshold: null
+    divergence_threshold: null
+    check_on_train_epoch_end: null
+  model_summary:
+    _target_: pytorch_lightning.callbacks.RichModelSummary
+    max_depth: -1
+  rich_progress_bar:
+    _target_: pytorch_lightning.callbacks.RichProgressBar
+  learning_rate_monitor:
+    _target_: pytorch_lightning.callbacks.LearningRateMonitor
+    logging_interval: null
+    log_momentum: false
+logger:
+  _target_: pytorch_lightning.loggers.mlflow.MLFlowLogger
+  experiment_name: ${task_name}
+  tracking_uri: ${paths.log_dir}/mlflow/mlruns
+  tags: null
+  save_dir: ${paths.log_dir}/mlflow/mlruns
+  log_model: false
+model:
+  optimizer:
+    _target_: torch.optim.Adam
+    _partial_: true
+    weight_decay: 0.0
+    betas:
+      - 0.9
+      - 0.999
+  scheduler:
+    _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+    _partial_: true
+    mode: min
+    factor: 0.1
+    patience: 3
+  net:
+    _target_: src.model.net.custom_conv_net.CustomConvNet
+    input_shape: null
+    conv_layers: 5
+    dropout_rate: 0.1
+    num_hidden_layers: 4
+    num_classes: 5
+  _target_: src.model.lung_colon_cancer_classifier.LungColonCancerClassifier
+  is_compile: true
+  lr: 0.01
+  class_names:
+    - colon-adenocarcinoma
+    - colon-benign-tissue
+    - lung-adenocarcinoma
+    - lung-benign-tissue
+    - lung-squamous-cell-carcinoma
+trainer:
+  _target_: pytorch_lightning.Trainer
+  default_root_dir: ${paths.output_dir}
+  max_epochs: 30
+  accelerator: gpu
+  devices: 1
+  precision: 16-mixed
+  check_val_every_n_epoch: 1
+  log_every_n_steps: 50
+  deterministic: false

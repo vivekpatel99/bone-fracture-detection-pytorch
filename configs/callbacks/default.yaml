@@ -16,7 +16,7 @@ model_checkpoint:
 
 early_stopping:
   monitor: ${monitor_metric}
-  patience: 100
+  patience: 3
   mode: ${monitor_direction}
 
 model_summary:
