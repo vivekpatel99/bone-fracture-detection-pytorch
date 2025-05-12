@@ -1,12 +1,17 @@
-#  uv run  src/train.py hparams_search=cnn_layers_search_optuna experiment=find_cnn_layers
-#  python src/train.py hparams_search=cnn_layers_search_optuna experiment=find_cnn_layers
-#  mlflow ui --backend-store-uri logs/mlflow/mlruns/
+#  run Experiments - uv run  src/train.py hparams_search=cnn_layers_search_optuna experiment=find_cnn_layers
+#  run Experiments - python src/train.py hparams_search=cnn_layers_search_optuna experiment=find_cnn_layers
+#  cd logs/mlflow/ && mlflow ui
+
+
+import os
 from typing import Any, List
 
+import dagshub
 import hydra
 import pyrootutils
 import pytorch_lightning as pl
 import torch
+from lightning.pytorch.tuner import Tuner
 from omegaconf import DictConfig, OmegaConf
 
 root = pyrootutils.setup_root(
@@ -19,17 +24,21 @@ from src import utils  # noqa: E402
 from src.utils.instantiators import instantiate_callbacks  # noqa: E402
 from src.utils.utils import extras, get_metric_value  # noqa: E402
 
+torch.set_float32_matmul_precision("medium")
 log = utils.get_pylogger(__name__)
 
 
-def net_hp_finder(cfg: DictConfig) -> dict[str, Any]:
+def train(cfg: DictConfig) -> dict[str, Any]:
     log.debug(f"Configuration: {cfg}")
+
+    dagshub.init(repo_owner=os.environ.get("DAGSHUB_REPO_OWNER"), repo_name=os.environ.get("DAGSHUB_REPO_NAME"), mlflow=True)
+
     # set seed for random number generators in pytorch, numpy and python.random
     if cfg.get("seed"):
         pl.seed_everything(cfg.seed, workers=True)
 
     log.info("Instantiating loggers...")
-    ml_logger = hydra.utils.instantiate(cfg.logger)
+    ml_logger = hydra.utils.instantiate(cfg.logger, tracking_uri=os.environ.get("DAGSHUB_TRACKING_URI"))
 
     log.info(f"Instantiating Net with experiment config <{cfg.model.net._target_}>")
     params = {
@@ -58,10 +67,18 @@ def net_hp_finder(cfg: DictConfig) -> dict[str, Any]:
 
     log.info(f"Instantiating trainer <{cfg.trainer._target_}>")
     trainer: pl.Trainer = hydra.utils.instantiate(cfg.trainer, logger=ml_logger, callbacks=callbacks)
-    # # TODO: lr finder
-    # if cfg.get("lr_finder"):
-    #     log.info("Starting lr finder!")
-    #     lr_finder = trainer.tuner.lr_find(model, datamodule=data_module)
+    tuner = Tuner(trainer)
+    if cfg.get("batch_size_finder"):
+        log.info("Starting batch size finder!")
+        tuner.scale_batch_size(model=model, datamodule=data_module, mode="binsearch")
+        log.info("new batch_size: {}".format(tuner.results))
+
+    if cfg.get("lr_finder"):
+        log.info("Starting lr finder!")
+        lr_finder = tuner.lr_find(model=model, datamodule=data_module)
+        new_lr = lr_finder.suggestion()
+        log.info("new lr: {}".format(new_lr))
+        model.lr = new_lr
 
     if cfg.get("train"):
         log.info("Starting training!")
@@ -89,7 +106,7 @@ def main(cfg: DictConfig):
     # (e.g. ask for tags if none are provided in cfg, print cfg tree, etc.)
     extras(cfg)
 
-    metric_dict = net_hp_finder(cfg)
+    metric_dict = train(cfg)
     metric_value = get_metric_value(metric_dict=metric_dict, metric_name=cfg.get("optimized_metric"))
 
     # return optimized metric
@@ -97,7 +114,4 @@ def main(cfg: DictConfig):
 
 
 if __name__ == "__main__":
-    #  Register a resolver for torch dtypes
-    # OmegaConf.register_new_resolver("torch_dtype", lambda name: getattr(torch, name))
-    torch.set_float32_matmul_precision("medium")
     main()

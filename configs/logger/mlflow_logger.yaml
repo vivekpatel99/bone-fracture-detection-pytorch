@@ -4,9 +4,9 @@ _target_: pytorch_lightning.loggers.mlflow.MLFlowLogger
 experiment_name: ${task_name}
 # run_name: ""
 tracking_uri: ${paths.log_dir}/mlflow/mlruns # run `mlflow ui` command inside the `logs/mlflow/` dir to open the UI
-tags: null
-save_dir: "./mlruns"
-prefix: ""
-artifact_location:
-  null
-  # run_id: ""
+tags: null #${tags}
+save_dir: ${paths.log_dir}/mlflow/mlruns
+log_model: False #  true/false/all
+# prefix: ""
+# artifact_location: ${paths.log_dir}/mlflow/mlruns/artifacts
+# run_id: ""

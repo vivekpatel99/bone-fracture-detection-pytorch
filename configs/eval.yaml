@@ -23,21 +23,14 @@ defaults:
   - debug: null
 
 # task name, determines output directory path - configured in hydra/default.yaml
-task_name: "train"
+task_name: "evaluatioin"
 
 # tags to help you identify your experiments
 # you can overwrite this in experiment configs
 # overwrite from command line with `python train.py tags="[first_tag, second_tag]"`
 # appending lists from command line is currently not supported :(
 # https://github.com/facebookresearch/hydra/issues/1547
-tags: ["dev"]
-
-optimized_metric: "val/acc_best"
-monitor_metric: "val/loss"
-monitor_direction: "min"
-batch_size_finder: False
-
-lr_finder: False
+tags: ["eval"]
 
 # set False to skip model training
 train: True
@@ -47,7 +40,7 @@ train: True
 test: True
 
 # simply provide checkpoint path to resume training
-ckpt_path: null
+ckpt_path: ???
 
 # seed for random number generators in pytorch, numpy and python.random
 seed: 42

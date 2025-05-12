@@ -3,6 +3,7 @@ defaults:
   - default
   - net: custom_conv_net
 is_compile: true
+lr: 0.01
 class_names:
   [
     "colon-adenocarcinoma",
