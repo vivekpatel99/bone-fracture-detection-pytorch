@@ -1,7 +1,6 @@
 import os
-from functools import partial
 from pathlib import Path
-from typing import Any, List
+from typing import Any
 
 import dagshub
 import hydra
@@ -52,10 +51,7 @@ def evaluate(cfg: DictConfig) -> dict[str, Any]:
     data_module: pl.LightningDataModule = hydra.utils.instantiate(cfg.datamodule)
 
     log.info(f"Instantiating trainer <{cfg.trainer._target_}>")
-    trainer: pl.Trainer = hydra.utils.instantiate(
-        cfg.trainer,
-        logger=ml_logger,
-    )
+    trainer: pl.Trainer = hydra.utils.instantiate(cfg.trainer, logger=ml_logger)
     object_dict = {
         "cfg": cfg,
         "datamodule": data_module,

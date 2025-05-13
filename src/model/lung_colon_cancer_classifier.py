@@ -39,13 +39,14 @@ class LungColonCancerClassifier(pl.LightningModule):
         self.is_compile = is_compile
         self.criterion = torch.nn.CrossEntropyLoss()
         self.num_classes = len(class_names)
+        self.class_names = class_names
         self.train_acc = Accuracy(task="multiclass", num_classes=self.num_classes)
         self.valid_acc = Accuracy(task="multiclass", num_classes=self.num_classes)
         self.test_acc = Accuracy(task="multiclass", num_classes=self.num_classes)
 
-        self.train_f1_sc = F1Score(task="multiclass", num_classes=self.num_classes)
-        self.valid_f1_sc = F1Score(task="multiclass", num_classes=self.num_classes)
-        self.test_f1_sc = F1Score(task="multiclass", num_classes=self.num_classes)
+        self.train_f1_sc = F1Score(task="multiclass", num_classes=self.num_classes, average="macro")
+        self.valid_f1_sc = F1Score(task="multiclass", num_classes=self.num_classes, average="macro")
+        self.test_f1_sc = F1Score(task="multiclass", num_classes=self.num_classes, average="macro")
 
         self.train_loss = MeanMetric()
         self.valid_loss = MeanMetric()
@@ -148,7 +149,14 @@ class LungColonCancerClassifier(pl.LightningModule):
         self._log_confusion_matrix(cm)
         # Classification Report
         log.info("Computing classification report...")
-        report = classification_report(targets.cpu(), preds.cpu(), output_dict=True)
+        report = classification_report(
+            targets.cpu(),
+            preds.cpu(),
+            output_dict=True,
+            target_names=self.class_names,
+            labels=list(range(self.num_classes)),
+        )
+
         self._log_classification_report(report)
 
     def compile_model(self):

@@ -68,6 +68,7 @@ def train(cfg: DictConfig) -> dict[str, Any]:
     log.info(f"Instantiating trainer <{cfg.trainer._target_}>")
     trainer: pl.Trainer = hydra.utils.instantiate(cfg.trainer, logger=ml_logger, callbacks=callbacks)
     tuner = Tuner(trainer)
+
     if cfg.get("batch_size_finder"):
         log.info("Starting batch size finder!")
         tuner.scale_batch_size(model=model, datamodule=data_module, mode="binsearch")
@@ -95,7 +96,6 @@ def train(cfg: DictConfig) -> dict[str, Any]:
         log.info(f"Best ckpt path: {ckpt_path}")
 
     test_metrics = trainer.callback_metrics
-
     # merge train and test metrics
     metric_dict = {**train_metrics, **test_metrics}
 
