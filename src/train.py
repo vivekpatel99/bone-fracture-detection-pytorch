@@ -92,6 +92,8 @@ def train(cfg: DictConfig) -> dict[str, Any]:
             log.warning("Best ckpt not found! Using current weights for testing...")
             ckpt_path = None
         trainer.test(model, datamodule=data_module, ckpt_path=ckpt_path)
+        log.info(f"Best ckpt path: {ckpt_path}")
+
     test_metrics = trainer.callback_metrics
 
     # merge train and test metrics

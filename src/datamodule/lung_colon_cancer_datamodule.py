@@ -83,8 +83,10 @@ class LungColonCancerDataModule(pl.LightningDataModule):
             # Subset the dataset
             train_indices = self.subset_indices(self.train_dataset)
             self.train_dataset = torch.utils.data.Subset(self.train_dataset, train_indices)
+
             val_indices = self.subset_indices(self.val_dataset)
             self.val_dataset = torch.utils.data.Subset(self.val_dataset, val_indices)
+
             test_indices = self.subset_indices(self.test_dataset)
             self.test_dataset = torch.utils.data.Subset(self.test_dataset, test_indices)
 

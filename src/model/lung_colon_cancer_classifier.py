@@ -2,8 +2,12 @@ from typing import Any
 
 import pyrootutils
 import pytorch_lightning as pl
+import seaborn as sns
 import torch
-from torchmetrics import Accuracy, F1Score, MaxMetric, MeanMetric
+from matplotlib import figure
+from matplotlib import pyplot as plt
+from sklearn.metrics import classification_report
+from torchmetrics import Accuracy, ConfusionMatrix, F1Score, MaxMetric, MeanMetric
 
 root = pyrootutils.setup_root(
     search_from=__file__,
@@ -52,6 +56,11 @@ class LungColonCancerClassifier(pl.LightningModule):
         # for tracking best so far validation accuracy
         self.val_acc_best = MaxMetric()
         self.val_f1_best = MaxMetric()
+
+        # testing metrics
+        self.test_targets = []
+        self.test_preds = []
+        self.test_cm = ConfusionMatrix(task="multiclass", num_classes=self.num_classes)  # , num_labels=class_names)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Perform a forward pass through the model `self.net`.
@@ -121,11 +130,30 @@ class LungColonCancerClassifier(pl.LightningModule):
         # update and log metrics
         self.test_loss(loss)
         self.test_acc(preds, targets)
+        self.test_preds.append(preds)
+        self.test_targets.append(targets)
         self.log("test/loss", self.test_loss, on_step=False, on_epoch=True, prog_bar=True)
         self.log("test/acc", self.test_acc, on_step=False, on_epoch=True, prog_bar=True)
 
         self.test_f1_sc(preds, targets)
         self.log("test/f1_score", self.test_f1_sc, on_step=False, on_epoch=True, prog_bar=True)
+
+    def on_test_end(self) -> None:
+        """Lightning hook that is called when a test epoch ends."""
+        targets = torch.cat(self.test_targets)
+        preds = torch.cat(self.test_preds)
+        # Confusion Matrix
+        log.info("Computing confusion matrix...")
+        cm = self.test_cm(preds, targets)
+        self._log_confusion_matrix(cm)
+        # Classification Report
+        log.info("Computing classification report...")
+        report = classification_report(targets.cpu(), preds.cpu(), output_dict=True)
+        self._log_classification_report(report)
+
+    def compile_model(self):
+        log.info("Compiling model...")
+        self.net = torch.compile(self.net)
 
     def setup(self, stage: str) -> None:
         """Lightning hook that is called at the beginning of fit (train + validate), validate,
@@ -137,7 +165,7 @@ class LungColonCancerClassifier(pl.LightningModule):
         :param stage: Either `"fit"`, `"validate"`, `"test"`, or `"predict"`.
         """
         if self.is_compile and stage == "fit":
-            self.net = torch.compile(self.net)
+            self.compile_model()
 
     def configure_optimizers(self):
         optimizer = self.hparams.optimizer(params=self.parameters(), lr=self.lr or self.hparams.lr)
@@ -153,3 +181,15 @@ class LungColonCancerClassifier(pl.LightningModule):
                 },
             }
         return {"optimizer": optimizer}
+
+    def _log_confusion_matrix(self, cm) -> None:
+        fig, ax = plt.subplots(figsize=(10, 7))
+        sns.heatmap(cm.cpu().numpy(), annot=True, fmt="d", cmap="Blues", ax=ax)
+        ax.set_xlabel("Predicted labels")
+        ax.set_ylabel("True labels")
+        ax.set_title("Confusion Matrix")
+        self.logger.experiment.log_figure(run_id=self.logger.run_id, figure=fig, artifact_file="evaluation/confusion_matrix.png")
+        plt.close(fig)
+
+    def _log_classification_report(self, report) -> None:
+        self.logger.experiment.log_dict(run_id=self.logger.run_id, dictionary=report, artifact_file="classification_report.json")

@@ -17,6 +17,18 @@
             },
         },
         {
+            "name": "Python Debugger: Eval",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/eval.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "env":
+            {
+                "HYDRA_FULL_ERROR": "1"
+            },
+        },
+        {
             "name": "Python Debugger: Experiment-Train",
             "type": "debugpy",
             "request": "launch",

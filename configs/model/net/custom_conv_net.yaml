@@ -1,5 +1,6 @@
 _target_: src.model.net.custom_conv_net.CustomConvNet
 input_shape: null
+
 conv_layers: 5
 dropout_rate: 0.1
 num_hidden_layers: 4
