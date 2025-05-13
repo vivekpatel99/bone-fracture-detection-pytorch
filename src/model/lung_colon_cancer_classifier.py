@@ -192,10 +192,22 @@ class LungColonCancerClassifier(pl.LightningModule):
 
     def _log_confusion_matrix(self, cm) -> None:
         fig, ax = plt.subplots(figsize=(10, 7))
-        sns.heatmap(cm.cpu().numpy(), annot=True, fmt="d", cmap="Blues", ax=ax)
-        ax.set_xlabel("Predicted labels")
-        ax.set_ylabel("True labels")
+        cm_np = cm.cpu().numpy()
+        # Plot with Predicted labels on the Y-axis and True labels on the X-axis
+        # This requires transposing the confusion matrix
+        sns.heatmap(
+            cm_np.T,
+            annot=True,
+            fmt="d",
+            cmap="Blues",
+            ax=ax,
+            xticklabels=self.class_names,  # Columns of cm_np.T are True Labels
+            yticklabels=self.class_names,
+        )  # Rows of cm_np.T are Predicted Labels
+        ax.set_xlabel("True labels")  # X-axis now represents True labels
+        ax.set_ylabel("Predicted labels")  # Y-axis now represents Predicted labels
         ax.set_title("Confusion Matrix")
+        fig.tight_layout()
         self.logger.experiment.log_figure(run_id=self.logger.run_id, figure=fig, artifact_file="evaluation/confusion_matrix.png")
         plt.close(fig)
 

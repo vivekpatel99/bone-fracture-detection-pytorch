@@ -1,5 +1,7 @@
 # Lung and Colon Cancer Classification
 
+![Final Result](readme_assets/final_result.png)
+
 ## About Dataset
 
 This dataset contains 25,000 histopathological images with 5 classes. All images are 768 x 768 pixels in size and are in jpeg file format.
@@ -173,6 +175,36 @@ url= {https://github.com/tampapath/lung_colon_image_set}
   6. **Model Pusher:** If the model meets evaluation criteria, pushes the model artifacts (model file, preprocessor) to the configured AWS S3 bucket.
 
 ## 📈 Results & Visualizations
+
+- final testing Result after model training
+
+```
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Test metric        ┃       DataLoader 0        ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│         test/acc          │            1.0            │
+│       test/f1_score       │            1.0            │
+│         test/loss         │  0.00015993608394637704   │
+└───────────────────────────┴───────────────────────────┘
+```
+
+### Classification Report
+
+| Class                        | Precision | Recall    | F1-Score  | Support  |
+| ---------------------------- | --------- | --------- | --------- | -------- |
+| colon-adenocarcinoma         | 0.998     | 1.000     | 0.999     | 500      |
+| colon-benign-tissue          | 1.000     | 0.998     | 0.999     | 500      |
+| lung-adenocarcinoma          | 0.970     | 0.982     | 0.976     | 500      |
+| lung-benign-tissue           | 1.000     | 1.000     | 1.000     | 500      |
+| lung-squamous-cell-carcinoma | 0.982     | 0.970     | 0.976     | 500      |
+|                              |           |           |           |          |
+| **Accuracy**                 |           |           | **0.990** | **2500** |
+| **Macro Avg**                | **0.990** | **0.990** | **0.990** | **2500** |
+| **Weighted Avg**             | **0.990** | **0.990** | **0.990** | **2500** |
+
+### Confusion Matrix
+
+![Confusion Matrix](readme_assets/confusion_matrix.png)
 
 ## 🖥️ Hardware Specifications
 
