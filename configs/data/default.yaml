@@ -2,19 +2,7 @@
 defaults:
   - _self_
   - lung_colon_cancer_images
+  - preprocessor
 
 valid_ds_size: 0.2
 test_ds_size: 0.1
-
-# # This allows injecting any dataset configuration
-train_preprocess_transforms:
-  - _target_: torchvision.transforms.v2.ToImage
-  - _target_: torchvision.transforms.v2.Resize
-    size: [320, 320]
-    antialias: True
-
-valid_preprocess_transforms:
-  - _target_: torchvision.transforms.v2.ToImage
-  - _target_: torchvision.transforms.v2.Resize
-    size: [320, 320]
-    antialias: True

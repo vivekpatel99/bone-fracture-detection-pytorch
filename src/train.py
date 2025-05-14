@@ -31,6 +31,10 @@ log = utils.get_pylogger(__name__)
 def train(cfg: DictConfig) -> dict[str, Any]:
     log.debug(f"Configuration: {cfg}")
 
+    # ---- Testing ----
+    cfg.trainer.max_epochs = 2
+    cfg.datamodule.subset_size = 0.1
+
     dagshub.init(repo_owner=os.environ.get("DAGSHUB_REPO_OWNER"), repo_name=os.environ.get("DAGSHUB_REPO_NAME"), mlflow=True)
 
     # set seed for random number generators in pytorch, numpy and python.random
@@ -51,7 +55,7 @@ def train(cfg: DictConfig) -> dict[str, Any]:
     }
     ml_logger.log_hyperparams(params)
 
-    input_shape = [3] + hydra.utils.instantiate(cfg.data.train_preprocess_transforms[1].size)
+    input_shape = [3] + hydra.utils.instantiate(cfg.data.train_preprocess_transforms[0].size)
     # Add/update input_shape in the net's configuration (cfg.model.net).
     # This allows Hydra to use it when instantiating the net as part of the model.
     OmegaConf.update(cfg.model.net, "input_shape", input_shape, merge=True)

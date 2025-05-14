@@ -7,8 +7,6 @@ import pyrootutils
 from omegaconf import DictConfig
 from sklearn.model_selection import train_test_split
 
-from src.utils.utils import create_dataset_dir, remove_dir
-
 root = pyrootutils.setup_root(
     search_from=__file__,
     indicator=[".git", "pyproject.toml"],
@@ -16,6 +14,7 @@ root = pyrootutils.setup_root(
     dotenv=True,
 )
 from src import utils  # noqa: E402
+from src.utils.utils import create_dataset_dir, remove_dir  # noqa: E402
 
 log = utils.get_pylogger(__name__)
 

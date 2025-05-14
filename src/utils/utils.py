@@ -46,7 +46,7 @@ def save_images_from_datasets(img_save_path: Path, dataset: ImageFolder):
     for image_data_tuple in tqdm(iterable=dataset, desc="Saving images", unit="image"):
         img = image_data_tuple[0]
         label = dataset.classes[image_data_tuple[1]]
-        log.debug(f"Label: {label}, Image size: {img.size()[-2:]}")
+        log.debug(f"Label: {label}, Image size: {img.size}")
 
         current_count = class_image_counters[label]
 

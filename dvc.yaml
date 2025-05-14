@@ -1,0 +1,50 @@
+stages:
+  data_split:
+    cmd: uv run src/data/data_split.py
+    deps:
+      - configs/data/default.yaml
+      - configs/data/lung_colon_cancer_images.yaml
+      - configs/paths/default.yaml
+      - src/data/data_split.py
+    outs:
+      - datasets/raw
+  data_processor:
+    cmd: uv run src/data/data_processor.py
+    deps:
+      - configs/data/lung_colon_cancer_images.yaml
+      - configs/data/preprocessor.yaml
+      - configs/paths/default.yaml
+      - src/data/data_processor.py
+    outs:
+      - datasets/processed
+  model_trainer:
+    cmd: uv run src/train.py
+    deps:
+      - configs/callbacks/default.yaml
+      - configs/callbacks/early_stopping.yaml
+      - configs/callbacks/learning_rate_monitor.yaml
+      - configs/callbacks/model_checkpoint.yaml
+      - configs/callbacks/model_summary.yaml
+      - configs/callbacks/rich_progress_bar.yaml
+      - configs/data/default.yaml
+      - configs/data/lung_colon_cancer_images.yaml
+      - configs/data/preprocessor.yaml
+      - configs/datamodule/default.yaml
+      - configs/datamodule/lung_colon_datamodule.yaml
+      - configs/extras/default.yaml
+      - configs/hparams_search/cnn_layers_search_optuna.yaml
+      - configs/hydra/default.yaml
+      - configs/logger/csv.yaml
+      - configs/logger/mlflow_logger.yaml
+      - configs/logger/tensorboard.yaml
+      - configs/model/default.yaml
+      - configs/model/lung_colon_cancer_classifier.yaml
+      - configs/model/net/custom_conv_net.yaml
+      - configs/model/optimizer/adam.yaml
+      - configs/model/scheduler/reduce_lr_on_plateau.yaml
+      - configs/paths/default.yaml
+      - configs/trainer/default.yaml
+      - configs/train.yaml
+      - src/train.py
+    outs:
+      - logs/train/runs

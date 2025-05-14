@@ -30,6 +30,7 @@
     "**/.ruff_cache": true,
     "**/.mypy_cache": true,
     "**/.pytest_cache": true,
+    "**/node_modules": true,
     ".python-version":true
   }
 }
