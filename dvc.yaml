@@ -48,3 +48,18 @@ stages:
       - src/train.py
     outs:
       - logs/train/runs
+  model_evaluator:
+    cmd: uv run src/eval.py
+    deps:
+      - configs/logger/mlflow_logger.yaml
+      - configs/model/default.yaml
+      - configs/model/lung_colon_cancer_classifier.yaml
+      - configs/model/net/custom_conv_net.yaml
+      - configs/model/optimizer/adam.yaml
+      - configs/model/scheduler/reduce_lr_on_plateau.yaml
+      - configs/paths/default.yaml
+      - configs/trainer/default.yaml
+      - configs/eval.yaml
+      - src/eval.py
+    outs:
+      - logs/evaluation

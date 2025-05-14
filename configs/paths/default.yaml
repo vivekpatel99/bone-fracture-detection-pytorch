@@ -5,6 +5,8 @@ root_dir: ${oc.env:PROJECT_ROOT}
 
 # path to results directory
 results_dir: ${paths.root_dir}/results
+best_model_json_name: best_model.json
+best_model_path: ${paths.results_dir}
 
 # path to logging directory
 log_dir: ${paths.root_dir}/logs/

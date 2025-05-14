@@ -192,3 +192,4 @@ lightning_logs
 *.ckpt
 local_s3/
 datasets/lung-and-colon-cancer-histopathological-images/*
+results/

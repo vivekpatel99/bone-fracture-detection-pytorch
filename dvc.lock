@@ -5,8 +5,8 @@ stages:
     deps:
     - path: configs/data/default.yaml
       hash: md5
-      md5: cc65c3b088e5f84af29cba5ecf891a81
-      size: 135
+      md5: 90e5de618bc178b0046ff67c9e985da7
+      size: 133
     - path: configs/data/lung_colon_cancer_images.yaml
       hash: md5
       md5: f5bb749f385a2988c517d907f639b745
@@ -17,8 +17,8 @@ stages:
       size: 991
     - path: src/data/data_split.py
       hash: md5
-      md5: b2c90a44801f4345f86d5ab10addf875
-      size: 2999
+      md5: 93a66aa92982b645446dbd044355a357
+      size: 3013
     outs:
     - path: datasets/raw
       hash: md5
@@ -79,8 +79,8 @@ stages:
       size: 295
     - path: configs/data/default.yaml
       hash: md5
-      md5: cc65c3b088e5f84af29cba5ecf891a81
-      size: 135
+      md5: 90e5de618bc178b0046ff67c9e985da7
+      size: 133
     - path: configs/data/lung_colon_cancer_images.yaml
       hash: md5
       md5: f5bb749f385a2988c517d907f639b745
@@ -160,6 +160,55 @@ stages:
     outs:
     - path: logs/train/runs
       hash: md5
-      md5: 0aba6ea023248887ff9d9ac1c44b5947.dir
-      size: 45075338
+      md5: e9a0d60f9ad84285c9221999d4458a7d.dir
+      size: 45077946
       nfiles: 7
+  model_evaluator:
+    cmd: uv run src/eval.py
+    deps:
+    - path: configs/eval.yaml
+      hash: md5
+      md5: 37b1dcf14205af02541069a957c6f3e6
+      size: 1546
+    - path: configs/logger/mlflow_logger.yaml
+      hash: md5
+      md5: 24c726892f87991741a11280c6cb9ca8
+      size: 423
+    - path: configs/model/default.yaml
+      hash: md5
+      md5: 83166111282a0d8a8543fc84724f7b90
+      size: 66
+    - path: configs/model/lung_colon_cancer_classifier.yaml
+      hash: md5
+      md5: dbbefdba0c2a4f6bdf508a27aae06e82
+      size: 313
+    - path: configs/model/net/custom_conv_net.yaml
+      hash: md5
+      md5: 89121fe22642c9bf1554c7e0c270082f
+      size: 184
+    - path: configs/model/optimizer/adam.yaml
+      hash: md5
+      md5: 2b1409ce0846de1ffc716f1ee5b4c230
+      size: 81
+    - path: configs/model/scheduler/reduce_lr_on_plateau.yaml
+      hash: md5
+      md5: e64666a5a9140a958a82600cd8b0d744
+      size: 103
+    - path: configs/paths/default.yaml
+      hash: md5
+      md5: 05070929b334e26767dc63c41729bad0
+      size: 991
+    - path: configs/trainer/default.yaml
+      hash: md5
+      md5: aac79a9d523fe8586627ac701fc83368
+      size: 431
+    - path: src/eval.py
+      hash: md5
+      md5: 4337ebe5e7ec5d37471645715504c92a
+      size: 3131
+    outs:
+    - path: logs/evaluation
+      hash: md5
+      md5: 81af01c20e59d3e700641f9a1ae5bee9.dir
+      size: 36994
+      nfiles: 5
