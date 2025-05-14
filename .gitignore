@@ -181,7 +181,7 @@ mlruns
 heart-attack-pred-key.pem
 logs
 .vscode/tasks.json.dvc
-datasets
+
 kaggle.json
 notebooks/lightning_logs
 ml-runs/
@@ -190,3 +190,5 @@ test_sweeper.py
 configs/test_config.yaml
 lightning_logs
 *.ckpt
+local_s3/
+datasets/lung-and-colon-cancer-histopathological-images/*
