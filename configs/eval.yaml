@@ -34,7 +34,7 @@ tags: ["eval"]
 
 monitor_metric: "val/loss"
 monitor_direction: "min"
-
+model_perf_diff_threshold: 0.02
 # evaluate on test set, using best model weights achieved during training
 # lightning chooses best weights based on the metric specified in checkpoint callback
 test: True
