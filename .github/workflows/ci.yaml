@@ -23,4 +23,4 @@ jobs:
         env:
           DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
         run: |
-          dvc repro
+          uv run dvc repro
