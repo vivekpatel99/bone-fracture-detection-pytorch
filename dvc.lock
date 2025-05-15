@@ -25,14 +25,11 @@ stages:
   data_processor:
     cmd: uv run src/data/data_processor.py
     deps:
-    - path: configs/data/lung_colon_cancer_images.yaml
+    - path: configs/data/
       hash: md5
-      md5: f5bb749f385a2988c517d907f639b745
-      size: 225
-    - path: configs/data/preprocessor.yaml
-      hash: md5
-      md5: 090cfe141dada5f890fe533f206da9ab
-      size: 382
+      md5: 676bc7c0642ca6bfbcb7a2eb29738286.dir
+      size: 855
+      nfiles: 5
     - path: configs/paths/default.yaml
       hash: md5
       md5: 727974e064f0acc7cd32349b6f78da10
