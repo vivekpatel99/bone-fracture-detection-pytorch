@@ -20,12 +20,13 @@ dependencies = [
     "torchinfo>=1.8.0",
     "torchmetrics>=1.7.1",
     "torchvision>=0.22.0",
+    "rich>=14.0.0",
+    "dvc>=3.59.2",
+    "dagshub>=0.5.9",
 ]
 
 [dependency-groups]
 dev = [
-    "dagshub>=0.5.9",
-    "dvc>=3.59.2",
     "hydra-optuna-sweeper>=1.2.0",
     "ipykernel>=6.29.5",
     "ipywidgets>=8.1.6",
@@ -33,5 +34,4 @@ dev = [
     "mlflow>=2.22.0",
     "pre-commit>=4.2.0",
     "pytest>=8.3.5",
-    "rich>=14.0.0",
 ]

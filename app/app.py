@@ -43,7 +43,7 @@ def load_model():
     model_path = "results/cloud_model.ckpt"
     input_shape = [3] + hydra.utils.instantiate(cfg.data.train_preprocess_transforms[0].size)
     cfg.model.net.input_shape = input_shape
-    checkpoint = torch.load(model_path, weights_only=True)
+    checkpoint = torch.load(model_path, weights_only=False)  # nosec B614
     # checkpoint = torch.load(cfg.ckpt_path, weights_only=False)
     model: pl.LightningModule = hydra.utils.instantiate(cfg.model)
     model.compile_model()
