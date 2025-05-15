@@ -1,0 +1,5 @@
+outs:
+- md5: 672f4fd9774389f21a98797f83f71a5e
+  size: 3063
+  hash: md5
+  path: s3_classifier.py

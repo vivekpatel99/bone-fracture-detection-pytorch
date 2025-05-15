@@ -1,0 +1,5 @@
+outs:
+- md5: bbdb0e51f606e41390f6da551446957e
+  size: 345
+  hash: md5
+  path: best_cnn_model.py
