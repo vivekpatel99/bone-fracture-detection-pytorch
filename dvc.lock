@@ -3,18 +3,15 @@ stages:
   data_split:
     cmd: uv run src/data/data_split.py
     deps:
-    - path: configs/data/default.yaml
+    - path: configs/data/
       hash: md5
-      md5: 90e5de618bc178b0046ff67c9e985da7
-      size: 133
-    - path: configs/data/lung_colon_cancer_images.yaml
-      hash: md5
-      md5: f5bb749f385a2988c517d907f639b745
-      size: 225
+      md5: 676bc7c0642ca6bfbcb7a2eb29738286.dir
+      size: 855
+      nfiles: 5
     - path: configs/paths/default.yaml
       hash: md5
-      md5: 05070929b334e26767dc63c41729bad0
-      size: 991
+      md5: 727974e064f0acc7cd32349b6f78da10
+      size: 1185
     - path: src/data/data_split.py
       hash: md5
       md5: 93a66aa92982b645446dbd044355a357
@@ -38,8 +35,8 @@ stages:
       size: 382
     - path: configs/paths/default.yaml
       hash: md5
-      md5: 05070929b334e26767dc63c41729bad0
-      size: 991
+      md5: 727974e064f0acc7cd32349b6f78da10
+      size: 1185
     - path: src/data/data_processor.py
       hash: md5
       md5: f188c9b9d1f13a0202da60bc6174a861
@@ -143,8 +140,8 @@ stages:
       size: 103
     - path: configs/paths/default.yaml
       hash: md5
-      md5: 05070929b334e26767dc63c41729bad0
-      size: 991
+      md5: 727974e064f0acc7cd32349b6f78da10
+      size: 1185
     - path: configs/train.yaml
       hash: md5
       md5: c886873f5ee622f65720c760ad5fa844
@@ -155,21 +152,21 @@ stages:
       size: 431
     - path: src/train.py
       hash: md5
-      md5: 684417d14dddb3c19e6bcaa2a2eb97cb
-      size: 4640
+      md5: ecec64adcaad83e344c8208bca1462f5
+      size: 5809
     outs:
     - path: logs/train/runs
       hash: md5
-      md5: e9a0d60f9ad84285c9221999d4458a7d.dir
-      size: 45077946
+      md5: fa372be9a7f917f30a11de99a543f950.dir
+      size: 45071477
       nfiles: 7
   model_evaluator:
     cmd: uv run src/eval.py
     deps:
     - path: configs/eval.yaml
       hash: md5
-      md5: 37b1dcf14205af02541069a957c6f3e6
-      size: 1546
+      md5: 1f5ecd9eda0a61d5cd42c5fffcaa01bf
+      size: 1577
     - path: configs/logger/mlflow_logger.yaml
       hash: md5
       md5: 24c726892f87991741a11280c6cb9ca8
@@ -196,19 +193,19 @@ stages:
       size: 103
     - path: configs/paths/default.yaml
       hash: md5
-      md5: 05070929b334e26767dc63c41729bad0
-      size: 991
+      md5: 727974e064f0acc7cd32349b6f78da10
+      size: 1185
     - path: configs/trainer/default.yaml
       hash: md5
       md5: aac79a9d523fe8586627ac701fc83368
       size: 431
     - path: src/eval.py
       hash: md5
-      md5: 4337ebe5e7ec5d37471645715504c92a
-      size: 3131
+      md5: 11c3b0df70d430d295642b840f823ae6
+      size: 5429
     outs:
     - path: logs/evaluation
       hash: md5
-      md5: 81af01c20e59d3e700641f9a1ae5bee9.dir
-      size: 36994
+      md5: 09b413369940442bb9034aca559f792c.dir
+      size: 30906
       nfiles: 5
