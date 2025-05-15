@@ -1,0 +1,31 @@
+stages:
+  data_split:
+    cmd: uv run src/data/data_split.py
+    deps:
+      - configs/data/ # Tracks all files in this directory
+      - configs/paths/default.yaml
+      - src/data/data_split.py
+    outs:
+      - datasets/raw
+  data_processor:
+    cmd: uv run src/data/data_processor.py
+    deps:
+      - configs/data/ # Tracks all files in this directory
+      - configs/paths/default.yaml
+      - src/data/data_processor.py
+    outs:
+      - datasets/processed
+  model_trainer:
+    cmd: uv run src/train.py
+    deps:
+      - configs/ # Tracks all configuration files
+      - src/train.py
+    outs:
+      - logs/train/runs
+  model_evaluator:
+    cmd: uv run src/eval.py
+    deps:
+      - configs/ # Tracks all configuration files
+      - src/eval.py
+    outs:
+      - logs/evaluation

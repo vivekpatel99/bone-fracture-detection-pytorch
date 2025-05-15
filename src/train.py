@@ -1,9 +1,11 @@
 #  run Experiments - uv run  src/train.py hparams_search=cnn_layers_search_optuna experiment=find_cnn_layers
 #  run Experiments - python src/train.py hparams_search=cnn_layers_search_optuna experiment=find_cnn_layers
 #  cd logs/mlflow/ && mlflow ui
+# uv run --env-file .env src/train.py
 
-
+import json
 import os
+from pathlib import Path
 from typing import Any, List
 
 import dagshub
@@ -21,6 +23,7 @@ root = pyrootutils.setup_root(
     dotenv=True,
 )
 from src import utils  # noqa: E402
+from src.entity.best_cnn_model import BestCNNModel, ModelConfig  # noqa: E402
 from src.utils.instantiators import instantiate_callbacks  # noqa: E402
 from src.utils.utils import extras, get_metric_value  # noqa: E402
 
@@ -30,6 +33,10 @@ log = utils.get_pylogger(__name__)
 
 def train(cfg: DictConfig) -> dict[str, Any]:
     log.debug(f"Configuration: {cfg}")
+
+    # ---- Testing ----
+    cfg.trainer.max_epochs = 2
+    cfg.datamodule.subset_size = 0.1
 
     dagshub.init(repo_owner=os.environ.get("DAGSHUB_REPO_OWNER"), repo_name=os.environ.get("DAGSHUB_REPO_NAME"), mlflow=True)
 
@@ -51,7 +58,7 @@ def train(cfg: DictConfig) -> dict[str, Any]:
     }
     ml_logger.log_hyperparams(params)
 
-    input_shape = [3] + hydra.utils.instantiate(cfg.data.train_preprocess_transforms[1].size)
+    input_shape = [3] + hydra.utils.instantiate(cfg.data.train_preprocess_transforms[0].size)
     # Add/update input_shape in the net's configuration (cfg.model.net).
     # This allows Hydra to use it when instantiating the net as part of the model.
     OmegaConf.update(cfg.model.net, "input_shape", input_shape, merge=True)
@@ -96,6 +103,30 @@ def train(cfg: DictConfig) -> dict[str, Any]:
         log.info(f"Best ckpt path: {ckpt_path}")
 
     test_metrics = trainer.callback_metrics
+    log.info("Saving Model configuration!")
+    model_config = ModelConfig(
+        input_shape=input_shape,
+        batch_size=cfg.datamodule.batch_size,
+        conv_layers=cfg.model.net.get("conv_layers"),
+        dropout_rate=cfg.model.net.get("dropout_rate"),
+        num_classes=cfg.model.net.get("num_classes"),
+        num_hidden_layers=cfg.model.net.get("num_hidden_layers"),
+    )
+    best_model = BestCNNModel(
+        check_point_path=ckpt_path,
+        f1_score=test_metrics["test/f1_score"],
+        accuracy=test_metrics["test/acc"],
+        loss=test_metrics["test/loss"],
+        params=model_config,
+    )
+    json_schme = best_model.model_dump()
+
+    best_model_json_path = Path(cfg.paths.best_model_path)
+    best_model_json_path.mkdir(parents=True, exist_ok=True)
+    best_model_json_file = best_model_json_path / cfg.paths.best_model_json_name
+    with open(best_model_json_file, "w") as f:
+        json.dump(json_schme, f, indent=4)
+    log.info(f"Best model saved at: {best_model_json_file}")
     # merge train and test metrics
     metric_dict = {**train_metrics, **test_metrics}
 

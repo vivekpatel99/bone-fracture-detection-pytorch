@@ -10,6 +10,8 @@ dependencies = [
     "lightning>=2.5.1.post0",
     "opencv-python>=4.11.0.86",
     "opendatasets>=0.1.22",
+    "pydantic>=2.10.6",
+    "pydantic-settings>=2.9.1",
     "pyrootutils>=1.0.4",
     "pytorch-lightning>=2.5.1.post0",
     "seaborn>=0.13.2",
@@ -22,6 +24,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "dagshub>=0.5.9",
+    "dvc>=3.59.2",
     "hydra-optuna-sweeper>=1.2.0",
     "ipykernel>=6.29.5",
     "ipywidgets>=8.1.6",
