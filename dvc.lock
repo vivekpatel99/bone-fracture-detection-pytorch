@@ -47,106 +47,11 @@ stages:
   model_trainer:
     cmd: uv run src/train.py
     deps:
-    - path: configs/callbacks/default.yaml
+    - path: configs/
       hash: md5
-      md5: 9c70f5f55cf60379259832205a3303d1
-      size: 451
-    - path: configs/callbacks/early_stopping.yaml
-      hash: md5
-      md5: 4495efeec1daee9abaa91932dcc8ac0d
-      size: 1244
-    - path: configs/callbacks/learning_rate_monitor.yaml
-      hash: md5
-      md5: 1303523f92c29658da730d5c8a6e20b5
-      size: 130
-    - path: configs/callbacks/model_checkpoint.yaml
-      hash: md5
-      md5: 79ecb97867b29f50d6fe05f32ac54bfe
-      size: 1090
-    - path: configs/callbacks/model_summary.yaml
-      hash: md5
-      md5: 2f1ebfba0a148386a905bdc59d25dcb1
-      size: 402
-    - path: configs/callbacks/rich_progress_bar.yaml
-      hash: md5
-      md5: 4e2eac3aa4cc73f64493e117c65ca9d5
-      size: 295
-    - path: configs/data/default.yaml
-      hash: md5
-      md5: 90e5de618bc178b0046ff67c9e985da7
-      size: 133
-    - path: configs/data/lung_colon_cancer_images.yaml
-      hash: md5
-      md5: f5bb749f385a2988c517d907f639b745
-      size: 225
-    - path: configs/data/preprocessor.yaml
-      hash: md5
-      md5: 090cfe141dada5f890fe533f206da9ab
-      size: 382
-    - path: configs/datamodule/default.yaml
-      hash: md5
-      md5: 0a0897283b3f86db4f7981ad20f864f6
-      size: 305
-    - path: configs/datamodule/lung_colon_datamodule.yaml
-      hash: md5
-      md5: dedbca7b937a76a054156ae4f4979584
-      size: 713
-    - path: configs/extras/default.yaml
-      hash: md5
-      md5: 1142c0a20d94905a567d7b88d91774ce
-      size: 232
-    - path: configs/hparams_search/cnn_layers_search_optuna.yaml
-      hash: md5
-      md5: 67a94eeff0f4bdf34e82b1467bb4b87b
-      size: 1034
-    - path: configs/hydra/default.yaml
-      hash: md5
-      md5: ed7f2fb41ba0f077ec0597910c8839c5
-      size: 400
-    - path: configs/logger/csv.yaml
-      hash: md5
-      md5: 9347ad802feac419e68398b63586d1da
-      size: 124
-    - path: configs/logger/mlflow_logger.yaml
-      hash: md5
-      md5: 24c726892f87991741a11280c6cb9ca8
-      size: 423
-    - path: configs/logger/tensorboard.yaml
-      hash: md5
-      md5: 7f0d929201d8fe4e8594158ead05a7ff
-      size: 258
-    - path: configs/model/default.yaml
-      hash: md5
-      md5: 83166111282a0d8a8543fc84724f7b90
-      size: 66
-    - path: configs/model/lung_colon_cancer_classifier.yaml
-      hash: md5
-      md5: dbbefdba0c2a4f6bdf508a27aae06e82
-      size: 313
-    - path: configs/model/net/custom_conv_net.yaml
-      hash: md5
-      md5: 89121fe22642c9bf1554c7e0c270082f
-      size: 184
-    - path: configs/model/optimizer/adam.yaml
-      hash: md5
-      md5: 2b1409ce0846de1ffc716f1ee5b4c230
-      size: 81
-    - path: configs/model/scheduler/reduce_lr_on_plateau.yaml
-      hash: md5
-      md5: e64666a5a9140a958a82600cd8b0d744
-      size: 103
-    - path: configs/paths/default.yaml
-      hash: md5
-      md5: 727974e064f0acc7cd32349b6f78da10
-      size: 1185
-    - path: configs/train.yaml
-      hash: md5
-      md5: c886873f5ee622f65720c760ad5fa844
-      size: 1608
-    - path: configs/trainer/default.yaml
-      hash: md5
-      md5: aac79a9d523fe8586627ac701fc83368
-      size: 431
+      md5: 323a6d9477d08de48a4b4a184e6d911b.dir
+      size: 14331
+      nfiles: 32
     - path: src/train.py
       hash: md5
       md5: ecec64adcaad83e344c8208bca1462f5
@@ -154,48 +59,17 @@ stages:
     outs:
     - path: logs/train/runs
       hash: md5
-      md5: fa372be9a7f917f30a11de99a543f950.dir
-      size: 45071477
+      md5: 2ca19d455785adb4498302dd87f58067.dir
+      size: 45075151
       nfiles: 7
   model_evaluator:
     cmd: uv run src/eval.py
     deps:
-    - path: configs/eval.yaml
+    - path: configs/
       hash: md5
-      md5: 1f5ecd9eda0a61d5cd42c5fffcaa01bf
-      size: 1577
-    - path: configs/logger/mlflow_logger.yaml
-      hash: md5
-      md5: 24c726892f87991741a11280c6cb9ca8
-      size: 423
-    - path: configs/model/default.yaml
-      hash: md5
-      md5: 83166111282a0d8a8543fc84724f7b90
-      size: 66
-    - path: configs/model/lung_colon_cancer_classifier.yaml
-      hash: md5
-      md5: dbbefdba0c2a4f6bdf508a27aae06e82
-      size: 313
-    - path: configs/model/net/custom_conv_net.yaml
-      hash: md5
-      md5: 89121fe22642c9bf1554c7e0c270082f
-      size: 184
-    - path: configs/model/optimizer/adam.yaml
-      hash: md5
-      md5: 2b1409ce0846de1ffc716f1ee5b4c230
-      size: 81
-    - path: configs/model/scheduler/reduce_lr_on_plateau.yaml
-      hash: md5
-      md5: e64666a5a9140a958a82600cd8b0d744
-      size: 103
-    - path: configs/paths/default.yaml
-      hash: md5
-      md5: 727974e064f0acc7cd32349b6f78da10
-      size: 1185
-    - path: configs/trainer/default.yaml
-      hash: md5
-      md5: aac79a9d523fe8586627ac701fc83368
-      size: 431
+      md5: 323a6d9477d08de48a4b4a184e6d911b.dir
+      size: 14331
+      nfiles: 32
     - path: src/eval.py
       hash: md5
       md5: 11c3b0df70d430d295642b840f823ae6
@@ -203,6 +77,6 @@ stages:
     outs:
     - path: logs/evaluation
       hash: md5
-      md5: 09b413369940442bb9034aca559f792c.dir
-      size: 30906
+      md5: e4e5a36cf86b79d31b1a4490a7ed3083.dir
+      size: 34514
       nfiles: 5
