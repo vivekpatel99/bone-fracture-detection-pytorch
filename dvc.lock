@@ -49,9 +49,9 @@ stages:
     deps:
     - path: configs/
       hash: md5
-      md5: 323a6d9477d08de48a4b4a184e6d911b.dir
-      size: 14331
-      nfiles: 32
+      md5: 64debb0aace5f6b4e6d76baf96530496.dir
+      size: 13976
+      nfiles: 31
     - path: src/train.py
       hash: md5
       md5: ecec64adcaad83e344c8208bca1462f5
@@ -67,9 +67,9 @@ stages:
     deps:
     - path: configs/
       hash: md5
-      md5: 323a6d9477d08de48a4b4a184e6d911b.dir
-      size: 14331
-      nfiles: 32
+      md5: 64debb0aace5f6b4e6d76baf96530496.dir
+      size: 13976
+      nfiles: 31
     - path: src/eval.py
       hash: md5
       md5: 11c3b0df70d430d295642b840f823ae6

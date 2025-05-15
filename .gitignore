@@ -194,3 +194,4 @@ local_s3/
 datasets/lung-and-colon-cancer-histopathological-images/*
 results/
 datasets/
+/results
