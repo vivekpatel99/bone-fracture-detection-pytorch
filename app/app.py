@@ -74,5 +74,8 @@ async def predict(request: Request, file: UploadFile = File(...)):  # noqa: B008
         output = model(img_tensor)
         pred = torch.argmax(output, dim=1).item()
 
+    print(CLASS_NAMES)
+    print(pred)
     pred_class_name = CLASS_NAMES[pred]
+
     return {"prediction": pred_class_name}

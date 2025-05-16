@@ -8,6 +8,14 @@ from src import utils
 
 log = utils.get_pylogger(__name__)
 
+CLASS_DICT = {
+    "colon_aca": "colon-adenocarcinoma",
+    "colon_n": "colon-benign-tissue",
+    "lung_aca": "lung-adenocarcinoma",
+    "lung_n": "lung-benign-tissue",
+    "lung_scc": "lung-squamous-cell-carcinoma",
+}
+
 
 def download_kaggle_dataset(dowload_dataset_name: str, download_dir: Path):
     """
@@ -58,7 +66,7 @@ def move_class_dir_to_root(dataset_dir: Path) -> Path:
         new_root_dir = dataset_dir / main_class_path.name
         for class_path in main_class_path.iterdir():
             for class_name in class_path.iterdir():
-                new_image_dir = new_root_dir / class_name.name
+                new_image_dir = new_root_dir / CLASS_DICT[class_name.name]
                 new_image_dir.mkdir(exist_ok=True)
                 for current_image_path in class_name.iterdir():
                     new_image_path = new_image_dir / current_image_path.name
