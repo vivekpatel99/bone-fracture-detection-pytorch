@@ -5,21 +5,21 @@ stages:
     deps:
     - path: configs/data/
       hash: md5
-      md5: 8f820e153ffa2425b9660fc34fd48cd1.dir
-      size: 856
-      nfiles: 5
+      md5: a924a9b3be4ee0a41e9bd125110a15aa.dir
+      size: 798
+      nfiles: 3
     - path: configs/paths/default.yaml
       hash: md5
       md5: 727974e064f0acc7cd32349b6f78da10
       size: 1185
     - path: src/data/data_split.py
       hash: md5
-      md5: 93a66aa92982b645446dbd044355a357
-      size: 3013
+      md5: 1c7f416a5c08a8d437369ccf909e24c3
+      size: 3435
     outs:
     - path: datasets/raw
       hash: md5
-      md5: bd6dc4d0ff5109e5227c403391dac90c.dir
+      md5: 15049effaf46093cc5f50ea1db1620a2.dir
       size: 1889443507
       nfiles: 25000
   data_processor:
@@ -27,9 +27,9 @@ stages:
     deps:
     - path: configs/data/
       hash: md5
-      md5: 676bc7c0642ca6bfbcb7a2eb29738286.dir
-      size: 855
-      nfiles: 5
+      md5: a924a9b3be4ee0a41e9bd125110a15aa.dir
+      size: 798
+      nfiles: 3
     - path: configs/paths/default.yaml
       hash: md5
       md5: 727974e064f0acc7cd32349b6f78da10
@@ -41,7 +41,7 @@ stages:
     outs:
     - path: datasets/processed
       hash: md5
-      md5: 0bb693e8a287ab15413525d0b6c7e726.dir
+      md5: 8fec9c24b0a8de0d22e8dec1e7457773.dir
       size: 2219740845
       nfiles: 25000
   model_trainer:
@@ -49,9 +49,9 @@ stages:
     deps:
     - path: configs/
       hash: md5
-      md5: 64debb0aace5f6b4e6d76baf96530496.dir
-      size: 13976
-      nfiles: 31
+      md5: b2f80856f3402937a55adc5498e9a634.dir
+      size: 13862
+      nfiles: 29
     - path: src/train.py
       hash: md5
       md5: ecec64adcaad83e344c8208bca1462f5
@@ -59,17 +59,17 @@ stages:
     outs:
     - path: logs/train/runs
       hash: md5
-      md5: 2ca19d455785adb4498302dd87f58067.dir
-      size: 45075151
+      md5: e60b568ab5df05ff59c2f53f8a4b098e.dir
+      size: 45074650
       nfiles: 7
   model_evaluator:
     cmd: uv run src/eval.py
     deps:
     - path: configs/
       hash: md5
-      md5: 64debb0aace5f6b4e6d76baf96530496.dir
-      size: 13976
-      nfiles: 31
+      md5: b2f80856f3402937a55adc5498e9a634.dir
+      size: 13862
+      nfiles: 29
     - path: src/eval.py
       hash: md5
       md5: 11c3b0df70d430d295642b840f823ae6
@@ -77,6 +77,6 @@ stages:
     outs:
     - path: logs/evaluation
       hash: md5
-      md5: e4e5a36cf86b79d31b1a4490a7ed3083.dir
-      size: 34514
+      md5: 3993dd116f2692063728ee76068013ab.dir
+      size: 34022
       nfiles: 5

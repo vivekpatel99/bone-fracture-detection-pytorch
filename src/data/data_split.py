@@ -14,6 +14,7 @@ root = pyrootutils.setup_root(
     dotenv=True,
 )
 from src import utils  # noqa: E402
+from src.utils.download_kaggel_ds import download_kaggle_dataset, flatten_dataset_dir  # noqa: E402
 from src.utils.utils import create_dataset_dir, remove_dir  # noqa: E402
 
 log = utils.get_pylogger(__name__)
@@ -34,8 +35,11 @@ def get_dataset_df(dataset_dir: Path) -> pd.DataFrame:
 
 @hydra.main(config_path=str(root / "configs"), config_name="train", version_base="1.3")
 def data_spliter(cfg: DictConfig) -> None:
-    DATASET_DIR = Path(root) / cfg.data.dataset_dir / cfg.data.dataset_name
+    DATASET_DIR = Path(root) / cfg.data.dataset_dir
+    DATASET_DIR.mkdir(parents=True, exist_ok=True)
     log.info(f"Dataset directory: {DATASET_DIR}")
+    download_kaggle_dataset(dowload_dataset_name=cfg.data.dataset_download_name, download_dir=DATASET_DIR)
+    flatten_dataset_dir(dataset_dir=DATASET_DIR)
 
     TRAIN_IMAGE_DIR = Path(root) / cfg.paths.train_raw_dir
     remove_dir(TRAIN_IMAGE_DIR)
@@ -50,7 +54,10 @@ def data_spliter(cfg: DictConfig) -> None:
     TRAIN_IMAGE_DIR.mkdir(parents=True, exist_ok=True)
     TEST_DIR.mkdir(parents=True, exist_ok=True)
 
-    dataset_df = get_dataset_df(DATASET_DIR)
+    dataset_pth = DATASET_DIR / cfg.data.datasets_name
+    assert dataset_pth.exists(), "Dataset does not exist"
+    dataset_df = get_dataset_df(DATASET_DIR / cfg.data.datasets_name)
+
     log.info(f"Dataset shape: {dataset_df.shape}")
     log.info(f"split dataset into train, validation: {cfg.data.valid_ds_size}, and test: {cfg.data.test_ds_size} sets")
     rest_ds, test_ds = train_test_split(
