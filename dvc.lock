@@ -5,8 +5,8 @@ stages:
     deps:
     - path: configs/data/
       hash: md5
-      md5: 676bc7c0642ca6bfbcb7a2eb29738286.dir
-      size: 855
+      md5: 8f820e153ffa2425b9660fc34fd48cd1.dir
+      size: 856
       nfiles: 5
     - path: configs/paths/default.yaml
       hash: md5
