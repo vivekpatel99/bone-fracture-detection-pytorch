@@ -7,7 +7,7 @@ class S3Client:
     s3_client = None
     s3_resource = None
 
-    def __init__(self, aws_scerets: AwsSecrets):
+    def __init__(self, aws_scerets: AwsSecrets) -> None:
         """
         This Class gets aws credentials from env_variable and creates an connection with s3 bucket
         and raise exception when environment variable is not set

@@ -15,7 +15,7 @@ log = utils.get_pylogger(__name__)
 class S3Bucket:
     def __init__(
         self,
-    ):
+    ) -> None:
         self.secrets = AwsSecrets()
         self.bucket_name = self.secrets.bucket_name
         self.s3_client = S3Client(aws_scerets=self.secrets)

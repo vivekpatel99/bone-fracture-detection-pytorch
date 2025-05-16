@@ -24,7 +24,7 @@ class S3Classifier:
         bucket_name,
         cloud_model_key,
         cloud_model_save_path,
-    ):
+    ) -> None:
         """
         :param bucket_name: Name of your model bucket
         :param model_path: Location of your model in bucket
