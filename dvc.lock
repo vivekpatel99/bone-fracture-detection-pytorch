@@ -49,8 +49,8 @@ stages:
     deps:
     - path: configs/
       hash: md5
-      md5: b2f80856f3402937a55adc5498e9a634.dir
-      size: 13862
+      md5: 6ae31584fbd82f65eed6cdf3499e4e8b.dir
+      size: 13919
       nfiles: 29
     - path: src/train.py
       hash: md5
@@ -59,16 +59,16 @@ stages:
     outs:
     - path: logs/train/runs
       hash: md5
-      md5: e60b568ab5df05ff59c2f53f8a4b098e.dir
-      size: 45074650
+      md5: b0b7a0aaa9f79dbe109cf215b8bdcda4.dir
+      size: 45077209
       nfiles: 7
   model_evaluator:
     cmd: uv run src/eval.py
     deps:
     - path: configs/
       hash: md5
-      md5: b2f80856f3402937a55adc5498e9a634.dir
-      size: 13862
+      md5: 6ae31584fbd82f65eed6cdf3499e4e8b.dir
+      size: 13919
       nfiles: 29
     - path: src/eval.py
       hash: md5
@@ -77,6 +77,6 @@ stages:
     outs:
     - path: logs/evaluation
       hash: md5
-      md5: 3993dd116f2692063728ee76068013ab.dir
-      size: 34022
+      md5: 9421da6fa6028b81b936454c3bfa3c14.dir
+      size: 36539
       nfiles: 5
