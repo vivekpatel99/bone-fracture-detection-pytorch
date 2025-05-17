@@ -31,6 +31,9 @@ class LungColonCancerClassifier(pl.LightningModule):
         scheduler: Any | None = None,
     ):
         super().__init__()
+        # Tell save_hyperparameters to ignore the 'net' attribute
+        self.save_hyperparameters(ignore=["net"])
+
         self.net = net
         # self.learning_rate = learning_rate
         self.optimizer = optimizer

@@ -54,14 +54,19 @@ stages:
       nfiles: 29
     - path: src/train.py
       hash: md5
-      md5: ecec64adcaad83e344c8208bca1462f5
-      size: 5809
+      md5: bec48128437cb96dcdb3db38cd8e6e04
+      size: 6014
     outs:
     - path: logs/train/runs
       hash: md5
-      md5: 63a26b5864cb00d0ef7a3a31ff500c3d.dir
-      size: 45077209
+      md5: e12895868fa64f2521781aa2981e088d.dir
+      size: 45068809
       nfiles: 7
+    - path: results
+      hash: md5
+      md5: b34d87f2d38f3a210f5bf9c590c97558.dir
+      size: 22520517
+      nfiles: 2
   model_evaluator:
     cmd: uv run src/eval.py
     deps:
@@ -70,6 +75,11 @@ stages:
       md5: 6ae31584fbd82f65eed6cdf3499e4e8b.dir
       size: 13919
       nfiles: 29
+    - path: results
+      hash: md5
+      md5: 49bdde1213ea05eed2803ecb60878c61.dir
+      size: 45040576
+      nfiles: 3
     - path: src/eval.py
       hash: md5
       md5: 11c3b0df70d430d295642b840f823ae6
@@ -77,6 +87,6 @@ stages:
     outs:
     - path: logs/evaluation
       hash: md5
-      md5: 8e6e07999533ac3431461e3829617ca0.dir
-      size: 36539
+      md5: 5b6745b109a6652a5ae700cf87f0f98e.dir
+      size: 28289
       nfiles: 5

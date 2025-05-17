@@ -46,11 +46,23 @@ build/
 # data/raw/
 # docs/
 artifact
-.gitignore
 logs
-template.py
-demo.py
+
 README.md
 LICENSE
 src.egg.-info
-notebook
+notebooks
+local_s3
+mlflow
+outputs
+readme_assets
+trained_model
+*.log
+.pre-commit-config.yaml
+ruff.toml
+.vscode
+datasets
+results
+tests
+dvc.lock
+dvc.yaml

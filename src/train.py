@@ -5,6 +5,7 @@
 
 import json
 import os
+import shutil
 from pathlib import Path
 from typing import Any, List
 
@@ -112,8 +113,13 @@ def train(cfg: DictConfig) -> dict[str, Any]:
         num_classes=cfg.model.net.get("num_classes"),
         num_hidden_layers=cfg.model.net.get("num_hidden_layers"),
     )
+    best_model_json_path = Path(cfg.paths.best_model_path)
+    best_model_json_path.mkdir(parents=True, exist_ok=True)
+    log.info(f"Saving best model to {best_model_json_path}")
+    model_name = Path(ckpt_path).name
+    shutil.copy2(src=ckpt_path, dst=str(best_model_json_path))
     best_model = BestCNNModel(
-        check_point_path=ckpt_path,
+        check_point_path=str(best_model_json_path / model_name),
         f1_score=test_metrics["test/f1_score"],
         accuracy=test_metrics["test/acc"],
         loss=test_metrics["test/loss"],
@@ -121,8 +127,6 @@ def train(cfg: DictConfig) -> dict[str, Any]:
     )
     json_schme = best_model.model_dump()
 
-    best_model_json_path = Path(cfg.paths.best_model_path)
-    best_model_json_path.mkdir(parents=True, exist_ok=True)
     best_model_json_file = best_model_json_path / cfg.paths.best_model_json_name
     with open(best_model_json_file, "w") as f:
         json.dump(json_schme, f, indent=4)

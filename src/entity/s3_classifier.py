@@ -21,9 +21,9 @@ class S3Classifier:
 
     def __init__(
         self,
-        bucket_name,
-        cloud_model_key,
-        cloud_model_save_path,
+        bucket_name: str,
+        cloud_model_key: str,
+        cloud_model_save_path: str,
     ) -> None:
         """
         :param bucket_name: Name of your model bucket

@@ -21,10 +21,12 @@ stages:
       - configs/ # Tracks all configuration files
       - src/train.py
     outs:
+      - results
       - logs/train/runs
   model_evaluator:
     cmd: uv run src/eval.py
     deps:
+      - results
       - configs/ # Tracks all configuration files
       - src/eval.py
     outs:

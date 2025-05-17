@@ -193,3 +193,5 @@ local_s3/
 results/
 datasets
 trained_model
+/results
+old_results/best_model.json

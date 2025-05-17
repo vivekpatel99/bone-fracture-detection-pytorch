@@ -8,11 +8,11 @@ results_dir: ${paths.root_dir}/results
 best_model_json_name: best_model.json
 best_model_path: ${paths.results_dir}
 
-# path to cloud model
+# --- path to cloud model  ---
 cloud_model_key: cloud_model.ckpt
 cloud_model_save_path: ${paths.results_dir}/cloud_model.ckpt
 
-# path to logging directory
+# --- path to logging directory   ---
 log_dir: ${paths.root_dir}/logs/
 
 # path to output directory, created dynamically by hydra

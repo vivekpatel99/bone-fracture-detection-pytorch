@@ -30,11 +30,6 @@ torch.set_float32_matmul_precision("medium")
 log = utils.get_pylogger(__name__)
 
 
-# TODO: 1. fetch model from aws s3
-# 2. compare the performance with local model
-# 3. if local model has better performance, upload to aws
-
-
 def evaluate_model(logger: MLFlowLogger, cfg: DictConfig, check_point_path: str) -> dict[str, Any]:
     """
     Evaluate the model with the given configuration.

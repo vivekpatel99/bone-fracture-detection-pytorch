@@ -3,7 +3,7 @@ import io
 import pathlib
 
 import hydra
-import numpy as np
+import pyrootutils
 import pytorch_lightning as pl
 import torch
 from fastapi import FastAPI, File, Request, UploadFile
@@ -13,6 +13,14 @@ from hydra import compose, initialize
 from omegaconf import DictConfig
 from PIL import Image
 from torchvision.transforms import v2
+
+root = pyrootutils.setup_root(
+    search_from=__file__,
+    indicator=[".git", "pyproject.toml"],
+    pythonpath=True,
+    dotenv=True,
+)
+from app.fetch_model_s3 import fetch_model_s3  # noqa: E402
 
 # Define the absolute path to the directory containing this app.py file
 # This will be /home/ultron/AI/practice-projects/CV/lung-and-colon-cancer-classification-pytorch/app/
@@ -38,9 +46,9 @@ cfg = get_cfgs()
 CLASS_NAMES = hydra.utils.instantiate(cfg.model.class_names)
 
 
-def load_model():
+def load_model() -> pl.LightningModule:
     torch.set_grad_enabled(False)
-    model_path = "results/cloud_model.ckpt"
+    model_path = fetch_model_s3(cfg)
     input_shape = [3] + hydra.utils.instantiate(cfg.data.train_preprocess_transforms[0].size)
     cfg.model.net.input_shape = input_shape
     checkpoint = torch.load(model_path, weights_only=False)  # nosec B614
