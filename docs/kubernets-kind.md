@@ -19,12 +19,7 @@ Ensure you have the following tools installed on your local machine:
 Prepare the following files in your project directory:
 
 - **`Dockerfile`**: This file defines how to build your application's Docker image. (Example: `../Dockerfile`)
-- **`.env`**: This file should contain your application's secrets or environment-specific configurations (e.g., API keys, database URLs). It will be used to create Kubernetes Secrets.
-  *Example `.env` file content:*
-  ```env
-  API_KEY=your_secret_api_key
-  ANOTHER_VARIABLE=some_value
-  ```
+- **`.env`**: as per showing in [Readme.md file](../README.md)
 - **`kind-deployment.yaml`**: This file will contain your Kubernetes Deployment and Service definitions. You will create this file with the content provided in the steps below.
 
 ## Deploying the Application on Kind
