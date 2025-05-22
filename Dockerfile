@@ -33,9 +33,8 @@ COPY . /app
 
 EXPOSE ${APP_PORT}
 
-ENTRYPOINT [ "bash" ]
 
-# ENTRYPOINT ["bash", "-c", "uv run --no-dev uvicorn app.app:app --host ${APP_HOST} --port ${APP_PORT}"]
+# ENTRYPOINT ["bash", "-c", "cd /app && uv run --no-dev uvicorn app.app:app --host ${APP_HOST} --port ${APP_PORT}"]
 
 
-# ENTRYPOINT ["bash", "-c", "cd /app && uv run fastapi dev --host 0.0.0.0 --port 8000"]
+ENTRYPOINT ["bash", "-c", "cd /app && uv run fastapi run --host ${APP_HOST} --port ${APP_PORT}"]
