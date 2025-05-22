@@ -40,12 +40,105 @@ url= {https://github.com/tampapath/lung_colon_image_set}
 - **Streamlit:** For building the prediction API (`app.py`).
 - **Docker:** Containerization for consistent environment.
 - **GitHub Actions:** CI/CD automation.
+- **Kubernetes (Kind):** For local Kubernetes deployment and testing ([kubernets-kind.md](docs/kubernets-kind.md))
 - **Pytorch/Pytorch lightning:** data preparation & modeltraining the model
 
 ## Project Structure
 
 ```tree
-
+├── app/
+│   ├── app.py
+│   ├── fetch_model_s3.py
+│   ├── __init__.py
+│   └── templates/
+│       └── index.html
+├── configs/
+│   ├── callbacks/
+│   │   ├── default.yaml
+│   │   ├── early_stopping.yaml
+│   │   ├── learning_rate_monitor.yaml
+│   │   ├── model_checkpoint.yaml
+│   │   ├── model_summary.yaml
+│   │   ├── none.yaml
+│   │   └── rich_progress_bar.yaml
+│   ├── data/
+│   │   ├── default.yaml
+│   │   ├── lung_colon_cancer_images.yaml
+│   │   └── preprocessor.yaml
+│   ├── datamodule/
+│   │   ├── default.yaml
+│   │   └── lung_colon_datamodule.yaml
+│   ├── eval.yaml
+│   ├── experiment/
+│   │   └── find_cnn_layers.yaml
+│   ├── extras/
+│   │   └── default.yaml
+│   ├── hparams_search/
+│   │   └── cnn_layers_search_optuna.yaml
+│   ├── hydra/
+│   │   └── default.yaml
+│   ├── logger/
+│   │   ├── csv.yaml
+│   │   ├── mlflow_logger.yaml
+│   │   └── tensorboard.yaml
+│   ├── model/
+│   │   ├── default.yaml
+│   │   └── lung_colon_cancer_classifier.yaml
+│   ├── paths/
+│   │   └── default.yaml
+│   ├── trainer/
+│   │   └── default.yaml
+│   └── train.yaml
+├── Dockerfile
+├── docs/
+│   └── kubernets-kind.md
+├── .env
+├── .github/
+│   └── workflows/
+│       └── ci.yaml
+├── kind-deployment.yaml
+├── notebooks/
+├── pyproject.toml
+├── README.md
+├── src/
+│   ├── cloud_storage/
+│   │   ├── aws_storage.py
+│   │   └── __init__.py
+│   ├── connections/
+│   │   ├── aws_connection.py
+│   │   └── __init__.py
+│   ├── data/
+│   │   ├── data_processor.py
+│   │   ├── data_split.py
+│   │   └── __init__.py
+│   ├── datamodule/
+│   │   ├── __init__.py
+│   │   └── lung_colon_cancer_datamodule.py
+│   ├── entity/
+│   │   ├── aws_secrets.py
+│   │   ├── best_cnn_model.py
+│   │   ├── __init__.py
+│   │   └── s3_classifier.py
+│   ├── eval.py
+│   ├── model/
+│   │   ├── __init__.py
+│   │   └── lung_colon_cancer_classifier.py
+│   ├── prediction.py
+│   ├── train.py
+│   └── utils/
+│       ├── download_kaggel_ds.py
+│       ├── __init__.py
+│       ├── instantiators.py
+│       ├── logging_utils.py
+│       ├── pylogger.py
+│       ├── rich_utils.py
+│       └── utils.py
+├── tests/
+│   ├── __init__.py
+│   └── model/
+│       ├── __init__.py
+│       └── test_custom_net.py
+├── uv.lock
 ```
 
 ### Model Training Pipeline
@@ -74,14 +167,13 @@ url= {https://github.com/tampapath/lung_colon_image_set}
 
 3. **Set up AWS:**
 
-   - Log in to your AWS Console.
-   - **IAM User:**
-     - Go to IAM > Users > Create user (e.g., `heartattack-dev-user`).
+   - **IAM User (Example):**
+     - Go to IAM > Users > Create user (e.g., `cancer-classifier-dev-user`).
      - Attach policies: `AdministratorAccess` (for ease of setup, consider more restrictive policies for production).
      - Create access key (select "Command Line Interface (CLI)") and download/copy the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
-   - **S3 Bucket:**
+   - **S3 Bucket (Example):**
      - Go to S3 > Create bucket.
-     - Choose a unique bucket name (e.g., `yourname-heartattack-models`).
+     - Choose a unique bucket name (e.g., `yourname-cancer-classifier-models`).
      - Select the region (e.g., `us-east-1`).
      - Uncheck "Block all public access" and acknowledge (needed for simple deployment setup; review security implications).
      - Create the bucket.
@@ -99,7 +191,7 @@ url= {https://github.com/tampapath/lung_colon_image_set}
      AWS_SECRET_ACCESS_KEY="YOUR_AWS_SECRET_ACCESS_KEY"
      AWS_REGION="us-east-1" # Or your chosen region
      # Add other necessary variables like DB_NAME, COLLECTION_NAME, BUCKET_NAME if needed by the code
-     # BUCKET_NAME="yourname-heartattack-models"
+     # BUCKET_NAME="yourname-cancer-classifier-models"
      ```
 
      - *Note: Ensure `.env` is listed in your `.gitignore` file. If you are using `uv run`, `uv` will automatically load variables from a `.env` file in the current or parent directories, so manual exporting might not be necessary when running scripts via `uv run`.*
@@ -215,3 +307,5 @@ While these specifications are recommended for optimal performance, the project 
 ## Found Bugs/Issues
 
 1. Pytorch Lightning - MLFlowLogger: while saving the model (fails to log artifact) -[issue](https://github.com/Lightning-AI/pytorch-lightning/issues/20664)
+
+tree -L 3 -F -a --prune --noreport -I ".git|__pycache__|.DS_Store|*.pyc|*.egg-info|.pytest_cache|.mypy_cache|.ruff_cache|.dvc|*.png|build|dist|*.log|*.tmp|.venv|venv|htmlcov|*.swp|node_modules|old_results|.vscode"
