@@ -27,14 +27,6 @@ WORKDIR /app
 # Copy your application code
 COPY . /app
 
-# Assuming you have a requirements.txt (ideally pinned, e.g., from 'uv pip compile')
-# If your pyproject.toml is the source of truth and you have a lock file like poetry.lock, uv sync should pick it up.
-# RUN uv sync --no-dev
-
 EXPOSE ${APP_PORT}
-
-
-# ENTRYPOINT ["bash", "-c", "cd /app && uv run --no-dev uvicorn app.app:app --host ${APP_HOST} --port ${APP_PORT}"]
-
 
 ENTRYPOINT ["bash", "-c", "cd /app && uv run fastapi run --host ${APP_HOST} --port ${APP_PORT}"]
