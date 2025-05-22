@@ -35,6 +35,7 @@ url= {https://github.com/tampapath/lung_colon_image_set}
 
 - **Python:** Core programming language.
 - **UV:** Environment management.
+- **Optuna** for hyperparameter tuning.
 - **Jupyter Notebook:** For exploratory data analysis (EDA), model development, and training.
 - **AWS:** `IAM`, `S3`, `ECR (Amazon Elastic Container Registry)`, `EC2` for cloud infrastructure, model storage, and deployment.
 - **Streamlit:** For building the prediction API (`app.py`).
@@ -187,11 +188,25 @@ url= {https://github.com/tampapath/lung_colon_image_set}
 
      ```dotenv
      # .env
-     AWS_ACCESS_KEY_ID="YOUR_AWS_ACCESS_KEY_ID"
-     AWS_SECRET_ACCESS_KEY="YOUR_AWS_SECRET_ACCESS_KEY"
-     AWS_REGION="us-east-1" # Or your chosen region
-     # Add other necessary variables like DB_NAME, COLLECTION_NAME, BUCKET_NAME if needed by the code
-     # BUCKET_NAME="yourname-cancer-classifier-models"
+      # --- Dataset ---
+      KAGGLE_USERNAME=
+      KAGGLE_KEY=
+
+      # --- DAGSHUB ---
+      DAGSHUB_REPO_OWNER=
+      DAGSHUB_REPO_NAME=
+      DAGSHUB_TRACKING_URI=
+      DAGSHUB_USER_TOKEN=
+      # --- AWS IAM ---
+      AWS_ACCESS_KEY_ID=
+      AWS_SECRET_ACCESS_KEY=
+      AWS_S3_BUCKET_NAME=
+      AWS_S3_REGION_NAME=
+
+      # --- AWS ECR ---
+      AWS_ECR_NAME=
+      AWS_ECR_URI=
+      AWS_ECR_MACHINNE=
      ```
 
      - *Note: Ensure `.env` is listed in your `.gitignore` file. If you are using `uv run`, `uv` will automatically load variables from a `.env` file in the current or parent directories, so manual exporting might not be necessary when running scripts via `uv run`.*

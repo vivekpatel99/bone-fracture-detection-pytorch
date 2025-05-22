@@ -8,10 +8,11 @@ This guide walks you through setting up a local Kubernetes cluster using Kind (K
 
 Ensure you have the following tools installed on your local machine:
 
-- **Kind:** Installation Guide
-- **kubectl:** Installation Guide
-- **Docker Desktop (or Docker Engine):** Kind runs Kubernetes clusters using Docker containers. Docker Desktop is recommended for easily managing resources for your Kind cluster, especially on Windows and macOS.
-  - **Tip:** For Docker Desktop users, consider installing the Kind extension from the settings and increasing allocated resources (CPU, memory) to prevent resource-related errors when running your cluster.
+- **Kind:** [Installation Guide](https://kind.sigs.k8s.io/docs/user/quick-start/#installation)
+- **kubectl:** [Installation Guide](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management)
+- **Docker Desktop (or Docker Engine):** [Installation Guide](https://docs.docker.com/desktop/setup/install/linux/)
+  - Kind runs Kubernetes clusters using Docker containers. Docker Desktop is recommended for easily managing resources for your Kind cluster, especially on Windows and macOS.
+  * **Tip:** For Docker Desktop users, consider installing the Kind extension from the settings and increasing allocated resources (CPU, memory) to prevent resource-related errors when running your cluster.
 
 ### 2. Project Files
 
