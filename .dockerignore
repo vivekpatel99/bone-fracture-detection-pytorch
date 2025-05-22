@@ -10,7 +10,6 @@ Dockerfile
 
 # Python virtual environment
 .venv
-venv
 env
 
 # Python cache

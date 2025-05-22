@@ -4,7 +4,6 @@ import pyrootutils
 import pytorch_lightning as pl
 import seaborn as sns
 import torch
-from matplotlib import figure
 from matplotlib import pyplot as plt
 from sklearn.metrics import classification_report
 from torchmetrics import Accuracy, ConfusionMatrix, F1Score, MaxMetric, MeanMetric
@@ -21,18 +20,17 @@ log = utils.get_pylogger(__name__)
 
 
 class LungColonCancerClassifier(pl.LightningModule):
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         net: torch.nn.Module,
         class_names: list[str],
+        *,
         is_compile: bool,
         optimizer: torch.optim.Optimizer,
         lr: float | None = None,
         scheduler: Any | None = None,
     ):
         super().__init__()
-        # Tell save_hyperparameters to ignore the 'net' attribute
-        self.save_hyperparameters(ignore=["net"])
 
         self.net = net
         # self.learning_rate = learning_rate
@@ -56,18 +54,20 @@ class LungColonCancerClassifier(pl.LightningModule):
         self.test_loss = MeanMetric()
         # this line allows to access init params with 'self.hparams' attribute
         # also ensures init params will be stored in ckpt
-        self.save_hyperparameters(logger=False)
+        # Tell save_hyperparameters to ignore the 'net' attribute
+        self.save_hyperparameters(logger=False, ignore=["net"])
         # for tracking best so far validation accuracy
         self.val_acc_best = MaxMetric()
         self.val_f1_best = MaxMetric()
 
         # testing metrics
-        self.test_targets = []
-        self.test_preds = []
+        self.test_targets: list[torch.Tensor] = []
+        self.test_preds: list[torch.Tensor] = []
         self.test_cm = ConfusionMatrix(task="multiclass", num_classes=self.num_classes)  # , num_labels=class_names)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """Perform a forward pass through the model `self.net`.
+        """
+        Perform a forward pass through the model `self.net`.
 
         :param x: A tensor of images.
         :return: A tensor of logits.
@@ -92,7 +92,7 @@ class LungColonCancerClassifier(pl.LightningModule):
         self.valid_f1_sc.reset()
         self.test_f1_sc.reset()
 
-    def training_step(self, batch, batch_idx) -> torch.Tensor:
+    def training_step(self, batch, _) -> torch.Tensor:
         loss, preds, targets = self._common_step(batch)
         # update and log metrics
         self.train_loss(loss)
@@ -104,10 +104,9 @@ class LungColonCancerClassifier(pl.LightningModule):
         return loss
 
     def on_train_epoch_end(self) -> None:
-        "Lightning hook that is called when a training epoch ends."
-        pass
+        """Lightning hook that is called when a training epoch ends."""
 
-    def validation_step(self, batch: tuple[torch.Tensor, torch.Tensor], batch_idx: int) -> torch.Tensor:
+    def validation_step(self, batch: tuple[torch.Tensor, torch.Tensor], _: int) -> torch.Tensor:
         loss, preds, targets = self._common_step(batch)
         self.valid_loss(loss)
         self.valid_acc(preds, targets)
@@ -129,7 +128,7 @@ class LungColonCancerClassifier(pl.LightningModule):
         self.val_f1_best(self.valid_f1_sc.compute())
         self.log("val/f1_score_best", self.val_f1_best.compute(), sync_dist=True, prog_bar=True)
 
-    def test_step(self, batch, batch_idx) -> None:
+    def test_step(self, batch: tuple[torch.Tensor, torch.Tensor], _: int) -> None:  # noqa: PT019
         loss, preds, targets = self._common_step(batch)
         # update and log metrics
         self.test_loss(loss)
@@ -162,19 +161,11 @@ class LungColonCancerClassifier(pl.LightningModule):
 
         self._log_classification_report(report)
 
-    def compile_model(self):
+    def compile_model(self) -> None:
         log.info("Compiling model...")
         self.net = torch.compile(self.net)
 
     def setup(self, stage: str) -> None:
-        """Lightning hook that is called at the beginning of fit (train + validate), validate,
-        test, or predict.
-
-        This is a good hook when you need to build models dynamically or adjust something about
-        them. This hook is called on every process when using DDP.
-
-        :param stage: Either `"fit"`, `"validate"`, `"test"`, or `"predict"`.
-        """
         if self.is_compile and stage == "fit":
             self.compile_model()
 
@@ -211,8 +202,16 @@ class LungColonCancerClassifier(pl.LightningModule):
         ax.set_ylabel("Predicted labels")  # Y-axis now represents Predicted labels
         ax.set_title("Confusion Matrix")
         fig.tight_layout()
-        self.logger.experiment.log_figure(run_id=self.logger.run_id, figure=fig, artifact_file="evaluation/confusion_matrix.png")
+        self.logger.experiment.log_figure(
+            run_id=self.logger.run_id,
+            figure=fig,
+            artifact_file="evaluation/confusion_matrix.png",
+        )
         plt.close(fig)
 
     def _log_classification_report(self, report) -> None:
-        self.logger.experiment.log_dict(run_id=self.logger.run_id, dictionary=report, artifact_file="classification_report.json")
+        self.logger.experiment.log_dict(
+            run_id=self.logger.run_id,
+            dictionary=report,
+            artifact_file="classification_report.json",
+        )

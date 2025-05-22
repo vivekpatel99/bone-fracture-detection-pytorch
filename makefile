@@ -12,7 +12,6 @@ run:
 		-it \
 		--env-file .env \
 		--rm \
-		--gpus all \
 		--ulimit memlock=-1:-1 \
 		--ulimit nofile=65536:65536 \
 		--ipc=host \

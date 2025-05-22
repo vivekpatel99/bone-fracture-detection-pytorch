@@ -1,6 +1,5 @@
 import torch
 from torch import nn
-from torchinfo import summary
 
 
 class CustomConvNet(nn.Module):
@@ -57,6 +56,8 @@ class CustomConvNet(nn.Module):
 
 
 if __name__ == "__main__":
+    from torchinfo import summary
+
     input_shape = (1, 3, 320, 320)
 
     net = CustomConvNet(

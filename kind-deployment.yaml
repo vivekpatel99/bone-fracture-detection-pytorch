@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cancer-cls-deployment
+spec:
+  replicas: 1  # Number of pods
+  revisionHistoryLimit: 1 # delete older replicas
+  # Selector and template define how to find/create Pods
+  selector:
+    matchLabels:
+      app: cancer-cls
+  template:
+    metadata:
+      labels:
+        app: cancer-cls
+    spec:
+      containers:
+      - name: cancer-cls-container
+        image: cancer-cls:latest
+        imagePullPolicy: Never  # Tell Kubernetes not to pull from a registry
+        ports:
+        - name: http
+          containerPort: 8000
+        envFrom:
+        - secretRef:
+            name: cancer-cls-secrets # Reference to the Kubernetes Secret
+...
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cancer-cls-service
+spec:
+  selector:
+    app: cancer-cls-selctor
+  ports:
+  - port: 80 #  Service is accessed on port 80
+    targetPort: 8000  # Traffic forwarded to port 8000 on the pod

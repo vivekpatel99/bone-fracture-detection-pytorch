@@ -72,17 +72,7 @@ url= {https://github.com/tampapath/lung_colon_image_set}
    uv sync
    ```
 
-3. **Set up MongoDB Atlas:**
-
-   - Sign up/log in to MongoDB Atlas.
-   - Create a new project.
-   - Create a free tier (M0) cluster.
-   - Configure a database user (username/password).
-   - Go to "Network Access" and add `0.0.0.0/0` to allow connections from any IP (for development; restrict in production).
-   - Go to your cluster > "Connect" > "Drivers" > Select Python (3.6 or later).
-   - Copy the connection string.
-
-4. **Set up AWS:**
+3. **Set up AWS:**
 
    - Log in to your AWS Console.
    - **IAM User:**
@@ -96,7 +86,7 @@ url= {https://github.com/tampapath/lung_colon_image_set}
      - Uncheck "Block all public access" and acknowledge (needed for simple deployment setup; review security implications).
      - Create the bucket.
 
-5. **Set up Environment Variables:**
+4. **Set up Environment Variables:**
 
    - **Method 1: `.env` file (Recommended for Local Development)**
 
@@ -145,13 +135,13 @@ url= {https://github.com/tampapath/lung_colon_image_set}
      # ... etc
      ```
 
-6. **Run the Project**
+5. **Run the Project**
 
    ```bash
    uv run streamlit run app.py
    ```
 
-7. **Push new changes to AWS**
+6. **Push new changes to AWS**
 
    - First uncomment code from [Github Actions](.github/workflows/aws.yaml) for AWS.
    - the commit and push your changes. Github Action will automatically build and deploy project on `EC2` instance.

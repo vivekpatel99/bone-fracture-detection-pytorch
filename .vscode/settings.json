@@ -1,6 +1,14 @@
 {
     // https://github.com/ArjanCodes/examples/blob/main/2024/vscode_python/.vscode/settings.json
     // Python settings
+    "[python]": {
+      "editor.defaultFormatter": "charliermarsh.ruff",
+      "editor.codeActionsOnSave": {
+        "source.fixAll.ruff": "explicit",
+        "source.organizeImports.ruff": "explicit"
+      }
+    },
+
 
     "python.analysis.autoSearchPaths": true,
     "python.analysis.diagnosticSeverityOverrides": {
@@ -19,6 +27,7 @@
     "python.testing.cwd": "${workspaceFolder}/tests",
     "python.testing.pytestPath": ".venv/bin/python",
     "python.testing.autoTestDiscoverOnSaveEnabled": true,
+    "python.analysis.typeCheckingMode": "off", // Disable Pylance Checking so MyPy Extension is only used
     "files.exclude": {
     "**/*.egg-info": true,
     "**/htmlcov": true,
@@ -32,5 +41,13 @@
     "**/.pytest_cache": true,
     "**/node_modules": true,
     ".python-version":true
-  }
+  },
+  // Notebook settings
+  "notebook.output.scrolling": true,
+  "notebook.formatOnSave.enabled": true,
+  "notebook.lineNumbers": "on",
+  "notebook.scrolling.revealNextCellOnExecute": "none",
+  "notebook.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
 }

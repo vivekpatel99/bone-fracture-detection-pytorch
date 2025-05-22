@@ -9,7 +9,6 @@ dependencies = [
     "hydra-colorlog>=1.2.0",
     "hydra-core>=1.3.2",
     "lightning>=2.5.1.post0",
-    "opencv-python>=4.11.0.86",
     "pydantic>=2.10.6",
     "pydantic-settings>=2.9.1",
     "pyrootutils>=1.0.4",
@@ -18,14 +17,19 @@ dependencies = [
     "torchmetrics>=1.7.1",
     "torchvision>=0.22.0",
     "rich>=14.0.0",
+    "pandas>=2.2.3",
+    "boto3>=1.38.10",
+    "seaborn>=0.13.2",
+    "scikit-learn>=1.6.1",
+    "types-seaborn>=0.13.2.20250516",
 ]
 
 [dependency-groups]
 dev = [
+    "opencv-python>=4.11.0.86",
     "dagshub>=0.5.9",
     "kaggle>=1.6.17",
     "dvc>=3.59.2",
-    "seaborn>=0.13.2",
     "torchinfo>=1.8.0",
     "hydra-optuna-sweeper>=1.2.0",
     "ipykernel>=6.29.5",

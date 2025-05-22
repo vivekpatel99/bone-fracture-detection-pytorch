@@ -11,6 +11,7 @@ repos:
       - id: end-of-file-fixer
       - id: check-docstring-first
       - id: check-yaml
+        args: [--allow-multiple-documents]
       - id: debug-statements
       - id: detect-private-key
       - id: check-executables-have-shebangs
@@ -21,11 +22,11 @@ repos:
         require_serial: true
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.8
+    rev: v0.11.10
     hooks:
-      - id: ruff
-        args: [--fix, --exit-non-zero-on-fix]
       - id: ruff-format
+      - id: ruff
+        args: [--fix,--exit-non-zero-on-fix]
 
   # python security linter
   - repo: https://github.com/PyCQA/bandit
@@ -63,6 +64,7 @@ repos:
           - --skip=logs/**,data/**,*.ipynb
           - --ignore-words-list=abc,def,bui
 
+    # Run ruff, isort, pyupgrade, mypy, pylint, flake8, black, blacken-docs, and more on Jupyter Notebooks
   - repo: https://github.com/nbQA-dev/nbQA
     rev: 1.9.1
     hooks:
