@@ -13,7 +13,6 @@ dependencies = [
     "pydantic-settings>=2.9.1",
     "pyrootutils>=1.0.4",
     "pytorch-lightning>=2.5.1.post0",
-    "torch>=2.7.0",
     "torchmetrics>=1.7.1",
     "torchvision>=0.22.0",
     "rich>=14.0.0",
@@ -22,22 +21,11 @@ dependencies = [
     "seaborn>=0.13.2",
     "scikit-learn>=1.6.1",
     "types-seaborn>=0.13.2.20250516",
-    "awscli>=1.40.21",
-    "pre-commit>=4.2.0",
 ]
-
-[dependency-groups]
-dev = [
-    "opencv-python>=4.11.0.86",
-    "dagshub>=0.5.9",
-    "kaggle>=1.6.17",
-    "dvc>=3.59.2",
-    "torchinfo>=1.8.0",
-    "hydra-optuna-sweeper>=1.2.0",
-    "ipykernel>=6.29.5",
-    "ipywidgets>=8.1.6",
-    "jupyter>=1.1.1",
-    "mlflow>=2.22.0",
-    "pre-commit>=4.2.0",
-    "pytest>=8.3.5",
-]
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu" }]
+torchvision = [{ index = "pytorch-cpu" }]
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
