@@ -111,10 +111,10 @@ kubectl get svc
 kubectl get svc cancer-cls-service
 ```
 
-- Try externa-ip:5000 directly on url or on terminal : curl http://external-ip:5000
+- Try externa-ip:8000 directly on url or on terminal : curl http://external-ip:8080
 
 ```bash
-curl http://a6bf6255d5f61470c9782b8955c98271-1409247973.us-east-1.elb.amazonaws.com:5000
+curl aea540af5e1e14a30920e9738f48d126-21096163.us-east-1.elb.amazonaws.com:8080
 ```
 
 # Reference

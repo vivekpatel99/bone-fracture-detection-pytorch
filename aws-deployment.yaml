@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: cancer-cls-deployment
 spec:
-  replicas: 1  # Number of pods
+  replicas: 2  # Number of pods
   # Selector and template define how to find/create Pods
   selector:
     matchLabels:
@@ -35,5 +35,5 @@ spec:
     app: cancer-cls-selctor
   ports:
     - name: http
-      port: 80 #  Service is accessed on port 80
+      port: 8000 #  Service is accessed on port 80
       targetPort: 8000  # Traffic forwarded to port 8000 on the pod
