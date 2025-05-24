@@ -20,7 +20,7 @@ spec:
         image: 835754295871.dkr.ecr.us-east-1.amazonaws.com/cancer-cls:latest
         ports:
         - name: http
-          containerPort: 8000
+          containerPort: 5000
         envFrom:
         - secretRef:
             name: cancer-cls-secrets # Reference to the Kubernetes Secret
@@ -36,5 +36,5 @@ spec:
     app: cancer-cls
   ports:
     - name: http
-      port: 8000 #  Service is accessed on port 8000 (or change to 80 if desired for external access)
-      targetPort: 8000  # Traffic forwarded to port 8000 on the pod
+      port: 5000 #  Service is accessed on port 8000 (or change to 80 if desired for external access)
+      targetPort: 5000  # Traffic forwarded to port 8000 on the pod
