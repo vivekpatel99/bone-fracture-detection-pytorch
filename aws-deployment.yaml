@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: cancer-cls-deployment
 spec:
-  replicas: 2  # Number of pods
+  replicas: 1 # Number of pods
   revisionHistoryLimit: 1
   # Selector and template define how to find/create Pods
   selector:
