@@ -33,16 +33,15 @@ url= {https://github.com/tampapath/lung_colon_image_set}
 
 ## 🛠️ Technologies Used
 
-- **Python:** Core programming language.
-- **UV:** Environment management.
-- **Optuna** for hyperparameter tuning.
-- **Jupyter Notebook:** For exploratory data analysis (EDA), model development, and training.
-- **AWS:** `IAM`, `S3`, `ECR (Amazon Elastic Container Registry)`, `EC2` for cloud infrastructure, model storage, and deployment.
-- **Streamlit:** For building the prediction API (`app.py`).
-- **Docker:** Containerization for consistent environment.
-- **GitHub Actions:** CI/CD automation.
-- **Kubernetes (Kind):** For local Kubernetes deployment and testing ([kubernets-kind.md](docs/kubernets-kind.md))
-- **Pytorch/Pytorch lightning:** data preparation & modeltraining the model
+**UV:** Environment management.
+**Optuna** for hyperparameter tuning.
+**Hydra:** For managing complex configurations.
+**Jupyter Notebook:** For exploratory data analysis (EDA), model development, and training.
+**AWS:** `IAM`, `S3`, `ECR (Amazon Elastic Container Registry)`, `EC2` for cloud infrastructure, model storage, and deployment.
+**FastAPI:** For building the high-performance prediction API (`app/app.py`).
+**Docker:** Containerization for consistent environment.
+**Kubernetes (Kind):** For local Kubernetes deployment and testing (kubernets-kind.md)
+**GitHub Actions:** CI/CD automation.
 
 ## Project Workflow
 
@@ -329,5 +328,3 @@ While these specifications are recommended for optimal performance, the project 
 ## Found Bugs/Issues
 
 1. Pytorch Lightning - MLFlowLogger: while saving the model (fails to log artifact) -[issue](https://github.com/Lightning-AI/pytorch-lightning/issues/20664)
-
-tree -L 3 -F -a --prune --noreport -I ".git|__pycache__|.DS_Store|*.pyc|*.egg-info|.pytest_cache|.mypy_cache|.ruff_cache|.dvc|*.png|build|dist|*.log|*.tmp|.venv|venv|htmlcov|*.swp|node_modules|old_results|.vscode"
