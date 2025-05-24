@@ -1,0 +1,92 @@
+name: CI Pipeline
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install uv
+          uv sync
+
+      - name: Run tests with pytest
+        run: |
+          uv run pytest
+
+      # - name: run DVC pipeline
+      #   env:
+      #     DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+      #     KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+      #     KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+      #     DAGSHUB_REPO_OWNER: ${{ secrets.DAGSHUB_REPO_OWNER }}
+      #     DAGSHUB_REPO_NAME: ${{ secrets.DAGSHUB_REPO_NAME }}
+      #     DAGSHUB_TRACKING_URI: ${{ secrets.DAGSHUB_TRACKING_URI }}
+      #   run: |
+      #     uv run dvc repro
+      - name: Login to AWS ECR
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ secrets.AWS_S3_REGION_NAME }}
+          aws ecr get-login-password --region ${{ secrets.AWS_S3_REGION_NAME }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_S3_REGION_NAME }}.amazonaws.com
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.AWS_ECR_REPO_NAME }}:latest .
+
+      - name: Tag Docker image
+        run: |
+          docker tag ${{ secrets.AWS_ECR_REPO_NAME }}:latest \
+          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_S3_REGION_NAME }}.amazonaws.com/${{ secrets.AWS_ECR_REPO_NAME }}:latest
+
+
+      - name: Check Docker Authentication
+        run: docker info
+
+      - name: Push Docker image to ECR
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_S3_REGION_NAME }}.amazonaws.com/${{ secrets.AWS_ECR_REPO_NAME }}:latest
+      - name: Set Up kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'latest'
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region ${{ secrets.AWS_S3_REGION_NAME }} --name cancer-cls-cluster
+
+      - name: Create .env file
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+          envkey_DAGSHUB_REPO_OWNER: ${{ secrets.DAGSHUB_REPO_OWNER }}
+          envkey_DAGSHUB_REPO_NAME: ${{ secrets.DAGSHUB_REPO_NAME }}
+          envkey_DAGSHUB_TRACKING_URI: ${{ secrets.DAGSHUB_TRACKING_URI }}
+          envkey_DAGSHUB_USER_TOKEN: ${{ secrets.DAGSHUB_USER_TOKEN }}
+          envkey_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          envkey_AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          envkey_AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
+          envkey_AWS_S3_REGION_NAME: ${{ secrets.AWS_S3_REGION_NAME }}
+          envkey_AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          envkey_AWS_ECR_REPO_NAME: ${{ secrets.AWS_ECR_REPO_NAME }}
+          file_name: .env
+
+      - name: Create Kubernetes Secret
+        run: |
+          kubectl create secret generic cancer-cls-secrets \
+            --from-env-file=.env --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Deploy to EKS
+        run: |
+          kubectl apply -f aws-deployment.yaml

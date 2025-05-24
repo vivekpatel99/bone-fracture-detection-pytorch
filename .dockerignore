@@ -7,7 +7,6 @@
 # Docker
 Dockerfile
 .dockerignore
-
 # Python virtual environment
 .venv
 env
@@ -40,6 +39,22 @@ dist/
 build/
 *.egg-info/
 
+# Python Development Artifacts & Caches
+*.so
+*.egg
+MANIFEST
+pip-log.txt
+.coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.tox/
+__pypackages__/
+.ipynb_checkpoints/
+.pypirc
+
+
 # Add any other files or directories you don't need in the image
 # e.g., large datasets, documentation source files, etc.
 # data/raw/
@@ -49,7 +64,6 @@ logs
 
 README.md
 LICENSE
-src.egg.-info
 notebooks
 local_s3
 mlflow
@@ -59,9 +73,7 @@ trained_model
 *.log
 .pre-commit-config.yaml
 ruff.toml
-.vscode
 datasets
 results
-tests
 dvc.lock
 dvc.yaml
