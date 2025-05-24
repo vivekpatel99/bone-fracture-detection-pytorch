@@ -44,6 +44,12 @@ url= {https://github.com/tampapath/lung_colon_image_set}
 - **Kubernetes (Kind):** For local Kubernetes deployment and testing ([kubernets-kind.md](docs/kubernets-kind.md))
 - **Pytorch/Pytorch lightning:** data preparation & modeltraining the model
 
+## Project Workflow
+
+![project-workflow](readme_assets/project-workflow.excalidraw.png)
+
+![ci-cd-workflow](readme_assets/ci-cd-workflow.excalidraw.svg)
+
 ## Project Structure
 
 ```tree
@@ -205,8 +211,7 @@ url= {https://github.com/tampapath/lung_colon_image_set}
 
       # --- AWS ECR ---
       AWS_ECR_NAME=
-      AWS_ECR_URI=
-      AWS_ECR_MACHINNE=
+
      ```
 
      - *Note: Ensure `.env` is listed in your `.gitignore` file. If you are using `uv run`, `uv` will automatically load variables from a `.env` file in the current or parent directories, so manual exporting might not be necessary when running scripts via `uv run`.*

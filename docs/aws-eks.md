@@ -2,7 +2,7 @@
 
 ## Setup
 
-- Install for AWS stuff will be done in docker container for convenience and easy setup and removal.
+- Installation of AWS CLI, `kubectl`, and `eksctl` will be managed within a Docker dev container. This approach ensures a consistent environment with all necessary tools pre-configured, simplifying setup and removal.
 - verify files in `.devcontainer`
 
 ```
@@ -35,7 +35,7 @@ kubectl version --client
 eksctl: eksctl version
 ```
 
-- verify secretes in github actions
+- verify secrets in github actions
 
 ```bash
 	AWS_ACCESS_KEY_ID
@@ -60,13 +60,13 @@ aws eks --region us-east-1 update-kubeconfig --name cancer-cls-cluster
 - Check EKS Cluster Configuration Ensure you can access your EKS cluster by running
 
 ```bash
-    aws eks list-clusters
+aws eks list-clusters
 ```
 
 - Delete cluster(optional):
 
 ```bash
-    eksctl delete cluster --name cancer-cls-cluster --region us-east-1
+eksctl delete cluster --name cancer-cls-cluster --region us-east-1
 ```
 
 - Delete All Evicted Pods
@@ -78,13 +78,13 @@ kubectl delete pods --field-selector 'status.phase==Terminating' --all-namespace
 Also, verify cluster deletion:
 
 ```bash
-    eksctl get cluster --region us-east-1
+eksctl get cluster --region us-east-1
 ```
 
 - Verify the cluster status:
 
 ```bash
-    aws eks --region us-east-1 describe-cluster --name cancer-cls-cluster --query "cluster.status"
+aws eks --region us-east-1 describe-cluster --name cancer-cls-cluster --query "cluster.status"
 ```
 
 - Check cluster connectivity:
@@ -108,7 +108,7 @@ kubectl get svc
 
 - Deploy the app on EKS via CICD pipeline
 
-  > > edit ci.yaml, deployment.yaml, dockerfile
+  > > edit ci_cd.yaml, aws-deployment.yaml, Dockerfile
   > > Also edit the security group for nodes and edit inbound rule for 5000 port
 
 - Once the LoadBalancer service is up, get the external IP:
@@ -120,17 +120,17 @@ kubectl get svc cancer-cls-service
 - Try externa-ip:5000 directly on url or on terminal : curl http://external-ip:5000
 
 ```bash
-curl aea540af5e1e14a30920e9738f48d126-21096163.us-east-1.elb.amazonaws.com:5000
+curl afcb7ae808e2f42bc9e3d4fb6c75da47-565229530.us-east-1.elb.amazonaws.com:5000
 ```
 
 ______________________________________________________________________
 
-AWS Resource Cleanup:
+**AWS Resource Cleanup:**
 
 - Delete deployment -
 
 ```bash
-kubectl delete deployment cancer-cls
+kubectl delete deployment cancer-cls-deployment
 ```
 
 - Delete service -
@@ -142,7 +142,7 @@ kubectl delete service cancer-cls-service
 - Delete env var -
 
 ```bash
-kubectl delete secret capstone-secret
+kubectl delete secret cancer-cls-secrets
 ```
 
 - Delete EKS Cluster -
@@ -157,9 +157,14 @@ eksctl delete cluster --name cancer-cls-cluster --region us-east-1
 eksctl get cluster --region us-east-1
 ```
 
-- Delete artifacts of ECR and S3 (optional - delete ECR and S3)
-- Validate if Cloud Formation stacks are deleted.
-- Confirm service termination on AWS support chat.
+**Delete ECR Images and S3 Artifacts (Optional):**
+
+- Manually delete any images pushed to Amazon ECR.
+- Manually delete any artifacts stored in Amazon S3 buckets if they are no longer needed.
+
+**Validate CloudFormation Stack Deletion:**
+
+- Check the AWS CloudFormation console to ensure that the stacks created by `eksctl` (e.g., `eksctl-cancer-cls-cluster-cluster`) have been deleted.
 
 # Reference
 
