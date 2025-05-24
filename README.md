@@ -245,7 +245,7 @@ url= {https://github.com/tampapath/lung_colon_image_set}
 5. **Run the Project**
 
    ```bash
-   uv run streamlit run app.py
+   uv run fastapi run app.py
    ```
 
 6. **Push new changes to AWS**

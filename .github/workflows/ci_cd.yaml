@@ -58,3 +58,41 @@ jobs:
       - name: Push Docker image to ECR
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_S3_REGION_NAME }}.amazonaws.com/${{ secrets.AWS_ECR_REPO_NAME }}:latest
+      - name: Set Up kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'latest'
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region ${{ secrets.AWS_S3_REGION_NAME }} --name cancer-cls-cluster
+
+      - name: 'Create env file'
+        run: |
+          echo "Creating .env file..."
+          touch .env
+
+          echo "DAGSHUB_REPO_OWNER=\"${DAGSHUB_REPO_OWNER}\"" >> .env
+          echo "DAGSHUB_REPO_NAME=\"${DAGSHUB_REPO_NAMEh}\"" >> .env
+          echo "DAGSHUB_TRACKING_URI=\"${DAGSHUB_TRACKING_URI}\"" >> .env
+          echo "DAGSHUB_USER_TOKEN=${{ secrets.DAGSHUB_USER_TOKEN }}" >> .env
+
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
+          echo "AWS_S3_BUCKET_NAME=\"${secrets.AWS_S3_BUCKET_NAME}\"" >> .env
+          echo "AWS_S3_REGION_NAME=\"${secrets.AWS_S3_REGION_NAME}\"" >> .env
+          echo "AWS_ACCOUNT_ID=\"${secrets.AWS_ACCOUNT_ID}\"" >> .env
+
+          echo "AWS_ECR_REPO_NAME=\"${secrets.AWS_ECR_REPO_NAME}\"" >> .env
+
+          echo ".env file created successfully:"
+          cat .env
+
+      - name: Create Kubernetes Secret
+        run: |
+          kubectl create secret generic cancer-cls-secrets \
+            --from-env-file=.env --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Deploy to EKS
+        run: |
+          kubectl apply -f aws-deployment.yaml
