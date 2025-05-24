@@ -48,7 +48,7 @@ eksctl: eksctl version
 - Create an EKS cluster:
 
 ```bash
-eksctl create cluster --name cancer-cls-cluster --region us-east-1 --nodegroup-name cancer-cls-nodes --node-type t3.small --nodes 1 --nodes-min 1 --nodes-max 1 --managed
+eksctl create cluster --name cancer-cls-cluster --region us-east-1 --nodegroup-name cancer-cls-nodes --node-type t3.medium --nodes 1 --nodes-min 1 --nodes-max 1 --managed
 ```
 
 - Update kubectl Config(Once the cluster is created, eksctl will automatically update your kubectl config file. However, you can verify and set it manually using:) This ensures your kubectl is pointing to the correct cluster.
@@ -67,6 +67,12 @@ aws eks --region us-east-1 update-kubeconfig --name cancer-cls-cluster
 
 ```bash
     eksctl delete cluster --name cancer-cls-cluster --region us-east-1
+```
+
+- Delete All Evicted Pods
+
+```bash
+kubectl delete pods --field-selector 'status.phase==Terminating' --all-namespaces
 ```
 
 Also, verify cluster deletion:
@@ -103,7 +109,7 @@ kubectl get svc
 - Deploy the app on EKS via CICD pipeline
 
   > > edit ci.yaml, deployment.yaml, dockerfile
-  > > Also edit the security group for nodes and edit inbound rule for 8000 port
+  > > Also edit the security group for nodes and edit inbound rule for 5000 port
 
 - Once the LoadBalancer service is up, get the external IP:
 
@@ -111,11 +117,49 @@ kubectl get svc
 kubectl get svc cancer-cls-service
 ```
 
-- Try externa-ip:8000 directly on url or on terminal : curl http://external-ip:8080
+- Try externa-ip:5000 directly on url or on terminal : curl http://external-ip:5000
 
 ```bash
-curl aea540af5e1e14a30920e9738f48d126-21096163.us-east-1.elb.amazonaws.com:8080
+curl aea540af5e1e14a30920e9738f48d126-21096163.us-east-1.elb.amazonaws.com:5000
 ```
+
+______________________________________________________________________
+
+AWS Resource Cleanup:
+
+- Delete deployment -
+
+```bash
+kubectl delete deployment cancer-cls
+```
+
+- Delete service -
+
+```bash
+kubectl delete service cancer-cls-service
+```
+
+- Delete env var -
+
+```bash
+kubectl delete secret capstone-secret
+```
+
+- Delete EKS Cluster -
+
+```bash
+eksctl delete cluster --name cancer-cls-cluster --region us-east-1
+```
+
+- Verify Cluster Deletion -
+
+```bash
+eksctl get cluster --region us-east-1
+```
+
+- Delete artifacts of ECR and S3 (optional - delete ECR and S3)
+- Validate if Cloud Formation stacks are deleted.
+- Confirm service termination on AWS support chat.
 
 # Reference
 
