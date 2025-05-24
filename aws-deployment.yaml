@@ -5,6 +5,7 @@ metadata:
   name: cancer-cls-deployment
 spec:
   replicas: 2  # Number of pods
+  revisionHistoryLimit: 1
   # Selector and template define how to find/create Pods
   selector:
     matchLabels:
@@ -32,8 +33,8 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: cancer-cls-selctor
+    app: cancer-cls
   ports:
     - name: http
-      port: 8000 #  Service is accessed on port 80
+      port: 8000 #  Service is accessed on port 8000 (or change to 80 if desired for external access)
       targetPort: 8000  # Traffic forwarded to port 8000 on the pod
