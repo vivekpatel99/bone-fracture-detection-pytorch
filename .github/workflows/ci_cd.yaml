@@ -67,26 +67,20 @@ jobs:
         run: |
           aws eks update-kubeconfig --region ${{ secrets.AWS_S3_REGION_NAME }} --name cancer-cls-cluster
 
-      - name: 'Create env file'
-        run: |
-          echo "Creating .env file..."
-          touch .env
-
-          echo "DAGSHUB_REPO_OWNER=\"${DAGSHUB_REPO_OWNER}\"" >> .env
-          echo "DAGSHUB_REPO_NAME=\"${DAGSHUB_REPO_NAMEh}\"" >> .env
-          echo "DAGSHUB_TRACKING_URI=\"${DAGSHUB_TRACKING_URI}\"" >> .env
-          echo "DAGSHUB_USER_TOKEN=${{ secrets.DAGSHUB_USER_TOKEN }}" >> .env
-
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
-          echo "AWS_S3_BUCKET_NAME=\"${secrets.AWS_S3_BUCKET_NAME}\"" >> .env
-          echo "AWS_S3_REGION_NAME=\"${secrets.AWS_S3_REGION_NAME}\"" >> .env
-          echo "AWS_ACCOUNT_ID=\"${secrets.AWS_ACCOUNT_ID}\"" >> .env
-
-          echo "AWS_ECR_REPO_NAME=\"${secrets.AWS_ECR_REPO_NAME}\"" >> .env
-
-          echo ".env file created successfully:"
-          cat .env
+      - name: Create .env file
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+          envkey_DAGSHUB_REPO_OWNER: ${{ secrets.DAGSHUB_REPO_OWNER }}
+          envkey_DAGSHUB_REPO_NAME: ${{ secrets.DAGSHUB_REPO_NAME }}
+          envkey_DAGSHUB_TRACKING_URI: ${{ secrets.DAGSHUB_TRACKING_URI }}
+          envkey_DAGSHUB_USER_TOKEN: ${{ secrets.DAGSHUB_USER_TOKEN }}
+          envkey_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          envkey_AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          envkey_AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
+          envkey_AWS_S3_REGION_NAME: ${{ secrets.AWS_S3_REGION_NAME }}
+          envkey_AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          envkey_AWS_ECR_REPO_NAME: ${{ secrets.AWS_ECR_REPO_NAME }}
+          file_name: .env
 
       - name: Create Kubernetes Secret
         run: |
