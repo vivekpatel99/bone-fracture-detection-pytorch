@@ -25,13 +25,36 @@ jobs:
         run: |
           uv run pytest
 
-      - name: run DVC pipeline
-        env:
-          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
-          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
-          DAGSHUB_REPO_OWNER: ${{ secrets.DAGSHUB_REPO_OWNER }}
-          DAGSHUB_REPO_NAME: ${{ secrets.DAGSHUB_REPO_NAME }}
-          DAGSHUB_TRACKING_URI: ${{ secrets.DAGSHUB_TRACKING_URI }}
+      # - name: run DVC pipeline
+      #   env:
+      #     DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+      #     KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+      #     KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+      #     DAGSHUB_REPO_OWNER: ${{ secrets.DAGSHUB_REPO_OWNER }}
+      #     DAGSHUB_REPO_NAME: ${{ secrets.DAGSHUB_REPO_NAME }}
+      #     DAGSHUB_TRACKING_URI: ${{ secrets.DAGSHUB_TRACKING_URI }}
+      #   run: |
+      #     uv run dvc repro
+      - name: Login to AWS ECR
         run: |
-          uv run dvc repro
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ secrets.AWS_S3_REGION_NAME }}
+          aws ecr get-login-password --region ${{ secrets.AWS_S3_REGION_NAME }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_S3_REGION_NAME }}.amazonaws.com
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.AWS_ECR_REPO_NAME }}:latest .
+
+      - name: Tag Docker image
+        run: |
+          docker tag ${{ secrets.AWS_ECR_REPO_NAME }}:latest \
+          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_S3_REGION_NAME }}.amazonaws.com/${{ secrets.AWS_ECR_REPO_NAME }}:latest
+
+
+      - name: Check Docker Authentication
+        run: docker info
+
+      - name: Push Docker image to ECR
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_S3_REGION_NAME }}.amazonaws.com/${{ secrets.AWS_ECR_REPO_NAME }}:latest
