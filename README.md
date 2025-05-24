@@ -1,6 +1,6 @@
 # Lung and Colon Cancer Classification
 
-![Final Result](readme_assets/final_result.png)
+![demo](readme_assets/demo.gif)
 
 ## About Dataset
 
@@ -277,6 +277,8 @@ url= {https://github.com/tampapath/lung_colon_image_set}
   6. **Model Pusher:** If the model meets evaluation criteria, pushes the model artifacts (model file, preprocessor) to the configured AWS S3 bucket.
 
 ## 📈 Results & Visualizations
+
+![Final Result](readme_assets/final_result.png)
 
 - final testing Result after model training
 
